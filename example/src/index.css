@@ -1,0 +1,66 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+:root {
+    --background-color: #fff;
+    --text-color: #111;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-color: rgb(20 20 20);
+        --text-color: rgb(230 230 230);
+    }
+}
+
+html {
+    background-color: #9ba8c7;
+    height: 100%;
+}
+
+body {
+    background-color: white;
+    height: 100%;
+    overflow-x: hidden;
+}
+
+p {
+    line-height: normal;
+}
+
+#map {
+    height: 100%;
+    width: 100%;
+}
+
+#root {
+    height: 100%;
+    position: relative;
+}
+
+.xw-radio-group-item[data-state="checked"],
+.xw-toggle-group-item[data-state="on"] {
+    @apply bg-white text-slate-900;
+}
+
+.xw-radio-group-item[data-state="unchecked"],
+.xw-toggle-group-item[data-state="off"] {
+    @apply opacity-70;
+}
+
+.xw-timeline-container {
+    .xw-radio-group-item[data-state="checked"] {
+    @apply bg-slate-900 text-white;
+    }
+}
+
+.awxgl-control-legend {
+    bottom: 90px;
+}

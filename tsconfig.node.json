@@ -1,0 +1,36 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "module": "commonjs",
+        "target": "es5",
+        "lib": [
+            "es2017",
+            "dom",
+            "dom.iterable"
+        ],
+        "declaration": true,
+        "emitDeclarationOnly": false,
+        "jsx": "react-jsx",
+        "noImplicitAny": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "moduleResolution": "node",
+        "outDir": "./dist/cjs",
+        "sourceMap": false,
+        "skipLibCheck": true,
+        "paths": {
+            "/@/*": [
+                "src/*"
+            ]
+        }
+    },
+    "exclude": [
+        "node_modules",
+        "scripts",
+        "vite.config.js",
+        "dist"
+    ],
+    "include": [
+        "src"
+    ]
+}

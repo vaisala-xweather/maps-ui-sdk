@@ -1,0 +1,45 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "lib": [
+            "DOM",
+            "DOM.Iterable",
+            "es2021"
+        ],
+        "types": [
+            "vite/client",
+            "node"
+        ],
+        "module": "ESNext",
+        "moduleResolution": "node",
+        "allowJs": false,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "strict": true,
+        "forceConsistentCasingInFileNames": true,
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "noEmit": true,
+        "declaration": true,
+        "declarationMap": true,
+        "jsx": "react-jsx",
+        "paths": {
+            "@/*": [
+                "../src/*"
+            ],
+            "@xweather/maps-ui-sdk/*": [
+                "../src/*"
+            ]
+        }
+    },
+    "include": [
+        "src",
+        "vite.config.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist",
+        "example"
+    ]
+}

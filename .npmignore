@@ -1,0 +1,46 @@
+node_modules/
+npm-debug.log
+
+/src/
+public/
+package/
+
+# Cnfiguration files
+commitlint.config.js
+*.config.cjs
+*.config.mjs
+*.config.ts
+tsconfig.json
+tsconfig.node.json
+tsconfig-esm.json
+*.yml
+*.yaml
+
+.npm/
+
+# Development tools
+circleDep
+.eslintignore
+.eslintrc.cjs
+.stylelintrc
+.git/
+.gitignore
+.npmignore
+
+# Log
+*.log
+
+# Cursor rules
+.cursorrules
+
+# Miscellaneous
+yarn.lock
+stats.html
+screenshot.png
+*.tgz
+
+.env
+.vscode
+.husky
+
+temp-analysis/
