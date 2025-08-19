@@ -1,7 +1,7 @@
 import { ColorScaleOptions } from '@aerisweather/mapsgl';
 import { NORMALIZED_COLOR_SCALES } from '@/constants/colors';
 
-export type ColorScale = (number | string)[];
+export type ColorScaleStops = (number | string)[];
 
 export type ColorScaleUnitConverter = ((value: number) => number) | undefined;
 

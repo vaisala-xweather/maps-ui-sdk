@@ -1,4 +1,4 @@
-import { ColorScale } from './colors';
+import { ColorScaleStops } from './colors';
 import { MeasurementType, Unit } from './units';
 
 export type DataView = 'temperature' | 'precipitation' | 'wind' | 'snowfall';
@@ -60,5 +60,5 @@ export interface DataViewConfigItem {
         expected: ExpectedApiKeyRoot
     };
     colorScaleTargetUnits: Unit,
-    colorScale: ColorScale;
+    colorScale: ColorScaleStops;
 }
