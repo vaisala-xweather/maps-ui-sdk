@@ -155,7 +155,7 @@ export const surfacePressureContour: LayerButtonOptions = {
     settingsOptions: [
         {
             name: sample.interpolation,
-            value: 2
+            value: 'bilinear'
         },
         data.quality
     ]
