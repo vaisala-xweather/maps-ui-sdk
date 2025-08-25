@@ -33,10 +33,10 @@ import { CONTROL_TYPE } from '@/constants/control';
 import { normalizeOptions } from '@/utils/control';
 import { MeasurementType, MapsGLUnitConversion, MapsGLUnitConversionTarget } from '@/types/units';
 import { UNITS, MEASUREMENT_TYPE, MEASUREMENT_TYPE_API_MAPPINGS } from '@/constants/units';
-import { convert } from '@/utils/units';
+import { convertUnitsToMapsGLUnits } from '@/utils/units';
 import { isValidMapsGLLayerProperty, convertToMapsGLValue } from '@/constants/valueConverterMapping';
 import { isMeasurementType } from '@/utils/unitTypeGuards';
-import { withTransparencyPrefix } from '@/utils/color';
+import { isTransparentColor } from '@/utils/color';
 import { deepMerge } from '@/utils/deepMerge';
 
 export const isCompositeLayer = (layerConfig: unknown): layerConfig is string[] => Array.isArray(layerConfig);
@@ -511,10 +511,8 @@ export const convertValueForMapsGL = (
         convertedValue = convertUnitsToMapsGLUnits(convertedValue, unitConversion);
     }
 
-    if (propertyId === LayerSchema.paint.sample.colorscalePath && colorScales && typeof value === 'string') {
-        convertedValue = value === 'Default'
-            ? defaultColorScale
-            : getColorScaleData(colorScales, value);
+    if (propertyId === LayerSchema.paint.sample.colorscalePath) {
+        convertedValue = resolveColorScale(value, colorScales, defaultColorScale);
     } else if (isValidMapsGLLayerProperty(propertyId)) {
         convertedValue = convertToMapsGLValue(propertyId, convertedValue);
     }
@@ -556,14 +554,67 @@ export const getLayerSettingsWithConvertedValues = (
 }, {});
 
 /**
- * Retrieves color scale data for a given value.
+ * Retrieves color scale data for a given id.
  * @param colorScales - Available color scales
- * @param value - Color scale identifier or 'Default'
+ * @param id - Color scale identifier or 'Default'
  * @returns ColorScaleOptions for the requested scale
  */
-export const getColorScaleData = (colorScales: Record<string, ColorScaleOptions>, value: string): ColorScaleOptions => {
-    const targetTheme = colorScales[value];
+export const getColorScaleDataById = (
+    colorScales: Record<string, ColorScaleOptions>,
+    id: string
+): ColorScaleOptions => {
+    const targetTheme = colorScales[id];
     return targetTheme ? deepMerge({}, targetTheme) as ColorScaleOptions : {};
+};
+
+/**
+ * Adds a transparent leading stop when the first stop isn't transparent.
+ * Uses `range.min` when available, otherwise `0` for normalized scales,
+ * otherwise the first stop's position.
+ *
+ * @param colorScale - Color scale to adjust
+ * @returns A new color scale with a transparent leading stop, or the original if not needed
+ */
+export const prependTransparentStopToColorScale = (colorScale: ColorScaleOptions): ColorScaleOptions => {
+    const { stops, range, normalized } = colorScale;
+    if (!stops || stops.length < 2) return colorScale;
+
+    const firstPos = stops[0];
+    const firstColor = stops[1];
+
+    if (typeof firstPos !== 'number' || typeof firstColor !== 'string') return colorScale;
+    if (isTransparentColor(firstColor)) return colorScale;
+
+    const insertAt = typeof range?.min === 'number'
+        ? range.min
+        : (normalized ? 0 : firstPos);
+
+    return { ...colorScale, stops: [insertAt, 'rgba(0,0,0,0)', ...stops] };
+};
+
+/**
+ * Resolves a color scale from a control value.
+ * - 'Default' → `defaultColorScale`
+ * - other id  → cloned entry from `colorScales`
+ * If the default scale uses `masks`, a transparent leading stop is enforced.
+ *
+ * @param value - Control value ('Default' or a colorscale id)
+ * @param colorScales - Available color scales
+ * @param defaultColorScale - Layer's default colorscale from MapsGL
+ * @returns A resolved ColorScaleOptions or `undefined` if not found
+ */
+export const resolveColorScale = (
+    value: unknown,
+    colorScales?: Record<string, ColorScaleOptions>,
+    defaultColorScale?: ColorScaleOptions
+): ColorScaleOptions | undefined => {
+    if (typeof value !== 'string' || !colorScales) return undefined;
+    if (value === 'Default') return defaultColorScale;
+
+    const colorScale = getColorScaleDataById(colorScales, value);
+    if (!colorScale || (!colorScale.stops && !colorScale.masks)) return undefined;
+
+    return defaultColorScale?.masks ? prependTransparentStopToColorScale(colorScale) : colorScale;
 };
 
 /**
@@ -597,22 +648,6 @@ const getMapsGLUnit = (
     }
 
     return MEASUREMENT_TYPE_API_MAPPINGS[measurementType]?.mapsgl.unitConversionTarget;
-};
-
-export const convertUnitsToMapsGLUnits = (
-    settingValue: string | number | string[] | number[],
-    unitConversion: MapsGLUnitConversion
-) => {
-    const { measurementType, from, to, scaleConversion } = unitConversion;
-    const unitConverter = (value: string | number) => (
-        convert(measurementType, Number(value), from, to, scaleConversion)
-    );
-
-    if (Array.isArray(settingValue)) {
-        return settingValue.map((value) => unitConverter(value));
-    }
-
-    return unitConverter(settingValue);
 };
 
 export const isCompositeWeatherLayer = (controller: AnyMapController, layer: LayerState): boolean => {
