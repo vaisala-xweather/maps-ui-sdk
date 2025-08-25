@@ -1,4 +1,4 @@
-import { deepMerge, get } from '@aerisweather/javascript-utils';
+import { get } from '@aerisweather/javascript-utils';
 import {
     type ColorScaleOptions,
     type WeatherLayerConfiguration,
@@ -36,6 +36,8 @@ import { UNITS, MEASUREMENT_TYPE, MEASUREMENT_TYPE_API_MAPPINGS } from '@/consta
 import { convert } from '@/utils/units';
 import { isValidMapsGLLayerProperty, convertToMapsGLValue } from '@/constants/valueConverterMapping';
 import { isMeasurementType } from '@/utils/unitTypeGuards';
+import { withTransparencyPrefix } from '@/utils/color';
+import { deepMerge } from '@/utils/deepMerge';
 
 export const isCompositeLayer = (layerConfig: unknown): layerConfig is string[] => Array.isArray(layerConfig);
 
@@ -420,7 +422,7 @@ const buildControlSetting = (
         const defaultControlSetting = LAYER_CONTROL_DATA[setting.name];
 
         if (defaultControlSetting) {
-            controlSetting = deepMerge(deepClone(defaultControlSetting), setting);
+            controlSetting = deepMerge(deepClone(defaultControlSetting), setting) as ControlSetting;
         } else if (layerConfig
              && !Array.isArray(layerConfig)
              && setting.name === LayerSchema.paint.sample.drawRangePath) {
@@ -549,7 +551,7 @@ export const getLayerSettingsWithConvertedValues = (
 
     return {
         ...state,
-        ...addPropertyToLayerData(state, property, convertedValue)
+        ...getObjectUpdatedByPath(state, property, convertedValue)
     };
 }, {});
 
@@ -561,7 +563,7 @@ export const getLayerSettingsWithConvertedValues = (
  */
 export const getColorScaleData = (colorScales: Record<string, ColorScaleOptions>, value: string): ColorScaleOptions => {
     const targetTheme = colorScales[value];
-    return targetTheme ? deepMerge({}, targetTheme) : {};
+    return targetTheme ? deepMerge({}, targetTheme) as ColorScaleOptions : {};
 };
 
 /**
@@ -573,11 +575,6 @@ export const getPaintProperty = (property: string): string => (
     property.startsWith('paint.')
         ? property.slice(6)
         : property);
-
-export const addPropertyToLayerData = (state: any, property: string, value: any) => {
-    const updatedObject = getObjectUpdatedByPath(state, property, value);
-    return updatedObject;
-};
 
 const getMapsGLUnit = (
     measurementType: MeasurementType | 'depth',
