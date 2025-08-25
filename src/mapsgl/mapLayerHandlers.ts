@@ -12,6 +12,7 @@ import {
 } from '@/utils/layers';
 import { type ValuePayload } from '@/types/action/dispatch';
 import { LayerSchema } from '@/mapsgl/layerDataSchema';
+import { deepClone } from '@/utils/clone';
 
 export const addLayerToMap = (
     layer: LayerState,
@@ -31,7 +32,7 @@ export const addLayerToMap = (
 
         const layerConfig = controller.weatherProvider.getWeatherLayerConfig(weatherId);
         const defaultColorScale = isWeatherLayerConfiguration(layerConfig)
-            ? layerConfig?.layer?.paint?.sample?.colorscale
+            ? deepClone(layerConfig?.layer?.paint?.sample?.colorscale)
             : undefined;
 
         const data = buildWeatherLayerData(
@@ -93,7 +94,7 @@ export const updateMapLayerSetting = (
 
         const config = controller.weatherProvider.getWeatherLayerConfig(weatherId);
         const defaultColorScale = isWeatherLayerConfiguration(config)
-            ? config.layer?.paint?.sample?.colorscale
+            ? deepClone(config.layer?.paint?.sample?.colorscale)
             : undefined;
 
         const unitConversion = unitConversions?.[id];
