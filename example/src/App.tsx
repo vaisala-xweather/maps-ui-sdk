@@ -105,11 +105,11 @@ export default function App() {
                     <FloatingControls />
                 </Anchor.TopRight>
 
-                <Anchor.BottomLeft offsetY={90} className="z-10">
+                <Anchor.BottomLeft offsetY={111} className="z-10">
                     <MapControls />
                 </Anchor.BottomLeft>
 
-                <Anchor.Bottom className="z-80 sm:z-90">
+                <Anchor.Bottom className="z-80 sm:z-90" offsetY={35}>
                     <MapsGLTimelineControl defaultExpanded={false} />
                 </Anchor.Bottom>
             </MapsGLMapControllerProvider>

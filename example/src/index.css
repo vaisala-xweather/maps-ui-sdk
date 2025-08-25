@@ -62,5 +62,51 @@ p {
 }
 
 .awxgl-control-legend {
-    bottom: 90px;
+    position: absolute;
+    bottom: 100px;
+    left: 60px;
+    max-width: 250px;
+    max-height: 130px;
+    overflow-y: auto;
+    z-index: 70;
+}
+
+.awxgl-legend-item {
+    overflow-y: unset !important;
+    max-height: unset !important;
+}
+
+.awxgl-legend-item-fade,
+.awxgl-legend-item-fade-bottom {
+    display: none;
+}
+
+@media (min-width: 412px) {
+    .awxgl-control-legend {
+        max-width: 340px;
+    }
+}
+
+@media (min-width: 640px) {
+    .awxgl-control-legend {
+        bottom: 106px;
+        left: auto;
+        right: 15px;
+        max-width: unset;
+    }
+}
+
+@media (min-width: 1280px) {
+    .awxgl-control-legend {
+        bottom: 35px;
+        left: auto;
+        right: 15px;
+        max-width: unset;
+    }
+}
+
+@media (max-height: 400px) {
+    .awxgl-control-legend {
+        right: 84px;
+    }
 }

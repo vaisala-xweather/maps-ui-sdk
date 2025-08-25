@@ -18,6 +18,7 @@ const config: Config = {
             },
             width: {
                 '10.5': '2.625rem',    // 42px
+                '50': '12.5rem',        // 200px
                 '65': '16.25rem',      // 260px
                 '90': '22.5rem'        // 360px
             },
