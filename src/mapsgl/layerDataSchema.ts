@@ -69,5 +69,6 @@ export const LayerSchema = {
         [PaintStyleKeys.grid]: GridStyleKeys,
         [PaintStyleKeys.symbol]: SymbolStyleKeys
     },
+    filter: 'filter',
     data: DataStyleKeys
 } as const;

@@ -16,6 +16,7 @@ import {
 } from '@/mapsgl/mapLayerHandlers';
 import { type LayerAction } from '@/types/action/layers';
 import LayerNotFoundError from '@/utils/error/layer/layerNotFoundError';
+import { isCompositeWeatherLayer } from '@/utils/layers';
 
 export interface UseLayerEffectsProps {
     effects: TrackedEffect[];
@@ -72,7 +73,10 @@ export const useLayerEffects = ({
                         break;
                     }
                     case LAYER_EFFECT.updateSetting: {
-                        if (controller.hasLayer(effect.layerId) && effect.setting) {
+                        if (isCompositeWeatherLayer(controller, layer)
+                            || (controller.hasLayer(effect.layerId)
+                                && effect.setting
+                                && controller.weatherProvider.isWeatherLayer(layer.weatherId))) {
                             updateMapLayerSetting(layer, effect.setting, controller, colorScales);
                         }
                         break;

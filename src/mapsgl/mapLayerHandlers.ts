@@ -84,10 +84,11 @@ export const updateMapLayerSetting = (
     try {
         const { id, value } = setting;
         const { layerId, weatherId, unitConversions } = layer;
-        const isWeatherLayer = controller.weatherProvider.isWeatherLayer(weatherId);
-        if (!isWeatherLayer) return;
 
-        const mapLayer = controller.getLayer(layerId);
+        const mapLayer = isCompositeWeatherLayer(controller, layer)
+            ? controller.getWeatherLayer(layerId)
+            : controller.getLayer(layerId);
+
         if (!mapLayer) return;
 
         const config = controller.weatherProvider.getWeatherLayerConfig(weatherId);
@@ -103,9 +104,20 @@ export const updateMapLayerSetting = (
             colorScales,
             defaultColorScale
         );
+        if (Array.isArray(mapLayer)) {
+            if (id === 'filter') {
+                mapLayer.forEach((childLayer: any) => {
+                    childLayer.setFilter(updatedValue);
+                });
+                return;
+            }
+            throw new Error('Composite layers are only supported for filter settings updates.');
+        }
 
         if (id === LayerSchema.data.quality && 'quality' in mapLayer) {
             mapLayer.quality = value;
+        } else if (id === 'filter') {
+            (mapLayer as any).setFilter(updatedValue);
         } else {
             mapLayer.setPaintProperty(getPaintProperty(id), updatedValue);
         }
