@@ -235,7 +235,7 @@ const ToggleGroupItem = forwardRef<HTMLButtonElement, ToggleGroupItemProps>(({
         'onClick': handleClick,
         'className': clsx(
             'xw-toggle-group-item',
-            className ?? 'xw-text-xs xw-px-2 xw-py-1 xw-text-start xw-rounded xw-border-[1px] xw-border-slate-500'
+            className ?? 'xw-text-xs xw-px-2 xw-py-1 xw-rounded xw-border-[1px] xw-border-slate-500 xw-gap-2'
         ),
         ...rest
     };

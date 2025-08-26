@@ -6,7 +6,8 @@ import {
     DefaultUnits,
     UnitsByMeasurementType,
     MeasurementTypeApiMappings,
-    MapsGLUnitSymbol
+    MapsGLUnitSymbol,
+    MapsGLUnitConversion
 } from '@/types/units';
 import { isDefaultUnits } from '@/utils/unitTypeGuards';
 import {
@@ -537,3 +538,19 @@ export const isPrecipitationOrSnowfall = (
 ): measurementType is (
     Extract<MeasurementType, typeof MEASUREMENT_TYPE.precipitation | typeof MEASUREMENT_TYPE.snowfall>
 ) => measurementType === MEASUREMENT_TYPE.precipitation || measurementType === MEASUREMENT_TYPE.snowfall;
+
+export const convertUnitsToMapsGLUnits = (
+    settingValue: string | number | string[] | number[],
+    unitConversion: MapsGLUnitConversion
+) => {
+    const { measurementType, from, to, scaleConversion } = unitConversion;
+    const unitConverter = (value: string | number) => (
+        convert(measurementType, Number(value), from, to, scaleConversion)
+    );
+
+    if (Array.isArray(settingValue)) {
+        return settingValue.map((value) => unitConverter(value));
+    }
+
+    return unitConverter(settingValue);
+};

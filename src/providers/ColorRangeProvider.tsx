@@ -1,5 +1,5 @@
 import React, { createContext, ReactNode, useContext } from 'react';
-import { ColorScale, ColorScaleUnitConverter } from '@/types/colors';
+import { ColorScaleStops, ColorScaleUnitConverter } from '@/types/colors';
 import { useColorScale } from '@/hooks/useColorScale';
 
 export interface ColorRangeContextValue {
@@ -28,7 +28,7 @@ export interface ColorRangeProviderProps {
     max?: number;
     rangeMin: number;
     rangeMax: number;
-    colorScale: ColorScale;
+    colorScale: ColorScaleStops;
     colorScaleUnitConverter?: ColorScaleUnitConverter;
     containerWidth?: number;
 }

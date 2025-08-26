@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+
 import { DIRECTION_MAPPING } from './direction';
 
 export const DIRECTION_REGEX = new RegExp(`\\b(${Object.keys(DIRECTION_MAPPING).join('|')})\\b`, 'g');

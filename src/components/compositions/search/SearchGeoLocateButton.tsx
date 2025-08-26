@@ -43,7 +43,15 @@ export const SearchGeolocateButton = forwardRef<HTMLButtonElement, SearchGeoloca
             const data: { response: SearchResult } = await fetchData(requestUrl);
 
             if (data?.response) {
-                onSelectResult(data?.response);
+                const selectedResult = {
+                    ...data.response,
+                    loc: {
+                        lat,
+                        long: lon
+                    }
+                };
+
+                onSelectResult(selectedResult);
             }
         } catch (error) {
             console.error('Geolocation failed:', error);

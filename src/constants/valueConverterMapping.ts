@@ -37,7 +37,7 @@ export const MAPSGL_VALUE_CONVERTERS = {
     [sample.expression]: VALUE_CONVERTERS.toString,
     [sample.channel]: VALUE_CONVERTERS.toString,
     [sample.quality]: VALUE_CONVERTERS.toString,
-    [sample.interpolation]: VALUE_CONVERTERS.toNumber,
+    [sample.interpolation]: VALUE_CONVERTERS.toString,
     [sample.smoothing]: VALUE_CONVERTERS.toNumber,
     [sample.colorscale.interval]: VALUE_CONVERTERS.toNumber,
     [sample.colorscale.interpolate]: VALUE_CONVERTERS.toBoolean,

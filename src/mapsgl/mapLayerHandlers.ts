@@ -12,6 +12,8 @@ import {
 } from '@/utils/layers';
 import { type ValuePayload } from '@/types/action/dispatch';
 import { LayerSchema } from '@/mapsgl/layerDataSchema';
+import { deepClone } from '@/utils/clone';
+import { extractColorScaleStopsOrMasks } from '@/utils/color';
 
 export const addLayerToMap = (
     layer: LayerState,
@@ -31,7 +33,7 @@ export const addLayerToMap = (
 
         const layerConfig = controller.weatherProvider.getWeatherLayerConfig(weatherId);
         const defaultColorScale = isWeatherLayerConfiguration(layerConfig)
-            ? layerConfig?.layer?.paint?.sample?.colorscale
+            ? deepClone(layerConfig?.layer?.paint?.sample?.colorscale)
             : undefined;
 
         const data = buildWeatherLayerData(
@@ -84,28 +86,41 @@ export const updateMapLayerSetting = (
     try {
         const { id, value } = setting;
         const { layerId, weatherId, unitConversions } = layer;
-        const isWeatherLayer = controller.weatherProvider.isWeatherLayer(weatherId);
-        if (!isWeatherLayer) return;
 
-        const mapLayer = controller.getLayer(layerId);
+        const mapLayer = isCompositeWeatherLayer(controller, layer)
+            ? controller.getWeatherLayer(layerId)
+            : controller.getLayer(layerId);
+
         if (!mapLayer) return;
 
         const config = controller.weatherProvider.getWeatherLayerConfig(weatherId);
         const defaultColorScale = isWeatherLayerConfiguration(config)
-            ? config.layer?.paint?.sample?.colorscale
+            ? deepClone(config.layer?.paint?.sample?.colorscale)
             : undefined;
-
+        const colorScaleData = extractColorScaleStopsOrMasks(defaultColorScale);
         const unitConversion = unitConversions?.[id];
         const updatedValue = convertValueForMapsGL(
             value,
             id,
             unitConversion,
             colorScales,
-            defaultColorScale
+            colorScaleData
         );
+
+        if (Array.isArray(mapLayer)) {
+            if (id === 'filter') {
+                mapLayer.forEach((childLayer: any) => {
+                    childLayer.setFilter(updatedValue);
+                });
+                return;
+            }
+            throw new Error('Composite layers are only supported for filter settings updates.');
+        }
 
         if (id === LayerSchema.data.quality && 'quality' in mapLayer) {
             mapLayer.quality = value;
+        } else if (id === 'filter') {
+            (mapLayer as any).setFilter(updatedValue);
         } else {
             mapLayer.setPaintProperty(getPaintProperty(id), updatedValue);
         }

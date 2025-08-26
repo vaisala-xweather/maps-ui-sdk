@@ -1,7 +1,7 @@
-import { ColorScale } from '@/types/colors';
+import { ColorScaleStops } from '@/types/colors';
 import { inToMM, inToM } from '@/utils/units';
 
-export const TEMPERATURE_COLOR_SCALE: ColorScale = [
+export const TEMPERATURE_COLOR_SCALE: ColorScaleStops = [
     -90, '#bef7ff',
     -84.44, '#00c7fb',
     -78.89, '#0075b6',
@@ -34,7 +34,7 @@ export const TEMPERATURE_COLOR_SCALE: ColorScale = [
     71.11, '#e9a696'
 ];
 
-export const WIND_SPEED_COLOR_SCALE: ColorScale = [
+export const WIND_SPEED_COLOR_SCALE: ColorScaleStops = [
     0, '#e4e8f1',
     1.1176, '#0050ff',
     3.3528, '#1bd3ff', // 5 mph
@@ -58,7 +58,7 @@ export const WIND_SPEED_COLOR_SCALE: ColorScale = [
     53.64, '#ffe9f5'
 ];
 
-export const SNOW_DEPTH_COLOR_SCALE: ColorScale = [
+export const SNOW_DEPTH_COLOR_SCALE: ColorScaleStops = [
     0, 'rgba(96,96,96,0)',
     inToM(0.01), 'rgba(96,96,96,0)',
     inToM(0.1), 'rgba(96,96,96,0.5)',
@@ -76,7 +76,7 @@ export const SNOW_DEPTH_COLOR_SCALE: ColorScale = [
     inToM(300), '#7100FF'
 ];
 
-export const PRECIP_ACCUMULATION_COLOR_SCALE: ColorScale = [
+export const PRECIP_ACCUMULATION_COLOR_SCALE: ColorScaleStops = [
     0, '#e4e8f1',
     inToMM(0.1), '#B8FF9C',
     inToMM(1.5), '#0E6D02',

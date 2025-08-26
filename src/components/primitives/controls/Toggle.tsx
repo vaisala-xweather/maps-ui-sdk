@@ -26,14 +26,12 @@ export const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(({
         ...props
     };
 
-    if (asChild && isValidElement(children)) {
-        return <Slot {...toggleProps}>{children}</Slot>;
-    }
+    const Component = asChild ? Slot : Button;
 
     return (
-        <Button {...toggleProps}>
+        <Component {...toggleProps}>
             {children}
-        </Button>
+        </Component>
     );
 });
 

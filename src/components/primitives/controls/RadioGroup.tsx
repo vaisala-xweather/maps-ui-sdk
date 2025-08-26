@@ -211,7 +211,7 @@ const RadioGroupItem = forwardRef<HTMLButtonElement, RadioGroupItemProps>(({
         'onClick': handleClick,
         'className': clsx(
             'xw-radio-group-item',
-            className ?? 'xw-text-xs xw-px-2 xw-py-1 xw-rounded xw-border-[1px] xw-border-slate-500'
+            className ?? 'xw-text-xs xw-px-2 xw-py-1 xw-rounded xw-border-[1px] xw-border-slate-500 xw-gap-2'
         ),
         ...rest
     }), [effectiveId, name, isChecked, itemValue, disabled, className, handleClick, rest]);

@@ -49,9 +49,9 @@ const PARTICLE_DENSITY = [{ label: 'Low', value: 8 },
     { label: '3', value: 76 },
     { label: 'High', value: 128 }];
 
-const INTERPOLATION = [{ label: 'None', value: 0 },
-    { label: 'Bilinear', value: 1 },
-    { label: 'Bicubic', value: 2 }];
+const INTERPOLATION = [{ label: 'None', value: 'none' },
+    { label: 'Bilinear', value: 'bilinear' },
+    { label: 'Bicubic', value: 'bicubic' }];
 
 const QUALITY = [{ label: 'Lowest', value: 'minimal' },
     { label: 'Low', value: 'low' },
