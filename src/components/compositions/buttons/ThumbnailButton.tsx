@@ -92,7 +92,7 @@ const ThumbnailButtonRoot = forwardRef<HTMLButtonElement, ThumbnailButtonRootPro
                         <ThumbnailButtonPreview
                             colorScaleKey={resolvedScaleKey}
                             value={value}
-                            className="xw-w-4 xw-h-4"
+                            className="xw-h-5 xw-w-10 xw-rounded xw-mr-2 xw-border-black xw-border"
                         />
                         <ThumbnailButtonLabel />
                     </>
