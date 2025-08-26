@@ -13,6 +13,7 @@ import {
 import { type ValuePayload } from '@/types/action/dispatch';
 import { LayerSchema } from '@/mapsgl/layerDataSchema';
 import { deepClone } from '@/utils/clone';
+import { extractColorScaleStopsOrMasks } from '@/utils/color';
 
 export const addLayerToMap = (
     layer: LayerState,
@@ -96,15 +97,16 @@ export const updateMapLayerSetting = (
         const defaultColorScale = isWeatherLayerConfiguration(config)
             ? deepClone(config.layer?.paint?.sample?.colorscale)
             : undefined;
-
+        const colorScaleData = extractColorScaleStopsOrMasks(defaultColorScale);
         const unitConversion = unitConversions?.[id];
         const updatedValue = convertValueForMapsGL(
             value,
             id,
             unitConversion,
             colorScales,
-            defaultColorScale
+            colorScaleData
         );
+
         if (Array.isArray(mapLayer)) {
             if (id === 'filter') {
                 mapLayer.forEach((childLayer: any) => {

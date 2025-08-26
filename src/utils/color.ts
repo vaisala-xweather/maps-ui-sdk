@@ -195,3 +195,23 @@ export const isCssColor = (value?: string): boolean => typeof value === 'string'
 export const isTransparentColor = (color: string): boolean => (
     chroma.valid(color.trim()) && chroma(color.trim()).alpha() === 0
 );
+
+/**
+ * Extracts only the essential color scale properties (stops or masks) from a full ColorScaleOptions object.
+ * This prevents overriding other properties like interval, range, etc. during color scale updates.
+ */
+export const extractColorScaleStopsOrMasks = (
+    colorScale?: ColorScaleOptions
+): Pick<ColorScaleOptions, 'stops' | 'masks'> | undefined => {
+    if (!colorScale) return undefined;
+
+    if (colorScale.stops) {
+        return { stops: colorScale.stops };
+    }
+
+    if (colorScale.masks) {
+        return { masks: colorScale.masks };
+    }
+
+    return undefined;
+};
