@@ -145,6 +145,7 @@ export { Time } from './components/primitives/display/dateDisplay/Time';
 
 export { Icon, type IconProps } from './components/primitives/display/Icon';
 export { Circle } from './components/primitives/display/Circle';
+export { ColorScalePreview, type ColorScalePreviewProps } from './components/primitives/display/ColorScalePreview';
 
 // overlays
 
@@ -196,8 +197,30 @@ export { Heading, type HeadingProps } from './components/primitives/text/Heading
 
 // buttons
 export { CloseButton } from './components/compositions/buttons/CloseButton';
-export { ThumbnailButton } from './components/compositions/buttons/ThumbnailButton';
 export { UnitButton } from './components/compositions/buttons/UnitButton';
+
+/* ------------------------------------------------------------------------------------------------------------------ */
+// Compound Component
+export {
+    ThumbnailButton,
+    type ThumbnailButtonProps,
+    type ThumbnailButtonComponent
+} from './components/compositions/buttons/ThumbnailButton';
+
+// Context
+export {
+    ThumbnailButtonContext,
+    useThumbnailButtonContext,
+    type ThumbnailButtonContextProps
+} from './components/compositions/buttons/ThumbnailButton';
+
+// Sub-components
+export {
+    ThumbnailButtonRoot, type ThumbnailButtonRootProps,
+    ThumbnailButtonPreview, type ThumbnailButtonPreviewProps,
+    ThumbnailButtonLabel, type ThumbnailButtonLabelProps
+} from './components/compositions/buttons/ThumbnailButton';
+/* ------------------------------------------------------------------------------------------------------------------ */
 
 /* ------------------------------------------------------------------------------------------------------------------ */
 // ColorRange
@@ -489,3 +512,4 @@ export type * from './types/animation';
 export type * from './types/units';
 export type * from './types/mapController';
 export type * from './types/settings';
+export type * from './types/colors';

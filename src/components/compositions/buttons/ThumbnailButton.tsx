@@ -39,7 +39,7 @@ const useThumbnailButtonContext = (): ThumbnailButtonContextProps => {
  * If you render no visible text, set `aria-label` on the root.
  */
 
-interface ThumbnailButtonProps extends ButtonProps {
+interface ThumbnailButtonRootProps extends ButtonProps {
   /** Text used by `<ThumbnailButton.Label />` and as a fallback `aria-label`. */
   label?: string;
   /** Colorscale key used by the default preview (falls back to `id`). */
@@ -52,7 +52,7 @@ interface ThumbnailButtonProps extends ButtonProps {
   value?: string;
 }
 
-const ThumbnailButtonRoot = forwardRef<HTMLButtonElement, ThumbnailButtonProps>(({
+const ThumbnailButtonRoot = forwardRef<HTMLButtonElement, ThumbnailButtonRootProps>(({
     id,
     value,
     label,
@@ -160,6 +160,8 @@ ThumbnailButtonLabel.displayName = 'ThumbnailButton.Label';
  * Convenience wrapper that renders `ThumbnailButton.Root` and attaches subcomponents.
  */
 
+type ThumbnailButtonProps = ThumbnailButtonRootProps;
+
 type ThumbnailButtonComponent =
   ForwardRefExoticComponent<ThumbnailButtonProps & RefAttributes<HTMLButtonElement>> & {
     Root: typeof ThumbnailButtonRoot;
@@ -190,6 +192,6 @@ export { ThumbnailButton, type ThumbnailButtonProps, type ThumbnailButtonCompone
 export { ThumbnailButtonContext, useThumbnailButtonContext, type ThumbnailButtonContextProps };
 
 // Sub-components
-export { ThumbnailButtonRoot, type ThumbnailButtonProps as ThumbnailButtonRootProps };
+export { ThumbnailButtonRoot, type ThumbnailButtonRootProps };
 export { ThumbnailButtonPreview, type ThumbnailButtonPreviewProps };
 export { ThumbnailButtonLabel, type ThumbnailButtonLabelProps };
