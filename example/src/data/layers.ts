@@ -2,7 +2,6 @@ import '@aerisweather/mapsgl/dist/mapsgl.css';
 import {
     type LayersConfig,
     LayerSchema,
-    NORMALIZED_COLOR_SCALES,
     MEASUREMENT_TYPE, UNITS,
     customFiresStyle,
     customLightningStyle
@@ -22,12 +21,14 @@ const { paint: { sample, opacity } } = LayerSchema;
 export const layersConfig: LayersConfig = [{
     id: 'radar',
     title: 'Radar',
+    selected: true,
     settingsOptions: [opacity,
         {
             name: sample.colorscalePath,
-            value: NORMALIZED_COLOR_SCALES.RdYlBu
+            value: 'Default'
         }, {
             name: sample.colorscale.interval,
+            value: 10,
             optionProps: {
                 units: {
                     measurementType: MEASUREMENT_TYPE.rate,
