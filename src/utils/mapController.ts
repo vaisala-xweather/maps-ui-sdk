@@ -5,7 +5,7 @@ import {
     MapboxMapController,
     GoogleMapController,
     LeafletMapController
-} from '@aerisweather/mapsgl';
+} from '@xweather/mapsgl';
 import {
     type MapEventHandlers,
     type MapEventHandlerProps,

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { type AnyMapController, type ColorScaleOptions } from '@aerisweather/mapsgl';
+import { type AnyMapController, type ColorScaleOptions } from '@xweather/mapsgl';
 import {
     type LayersState,
     type LayerState,

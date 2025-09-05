@@ -1,4 +1,4 @@
-import { units } from '@aerisweather/mapsgl';
+import { units } from '@xweather/mapsgl';
 import {
     UNIT_SYSTEM,
     DEFAULT_UNITS,

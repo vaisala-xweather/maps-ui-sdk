@@ -6,7 +6,7 @@ import {
     type GoogleMap,
     type MaplibreMap,
     type L
-} from '@aerisweather/mapsgl';
+} from '@xweather/mapsgl';
 import Event from '@aerisweather/javascript-utils/dist/lib/es6/events/Event';
 import { HANDLER_TO_EVENT_NAME } from '@/constants/mapController';
 

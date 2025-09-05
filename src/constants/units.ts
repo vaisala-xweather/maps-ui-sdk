@@ -1,4 +1,4 @@
-import { units } from '@aerisweather/mapsgl';
+import { units } from '@xweather/mapsgl';
 import { UnitKey, UnitAliasesByUnitKey, MeasurementTypeApiMappings } from '@/types/units';
 
 const { Units: MapsGLUnits } = units;

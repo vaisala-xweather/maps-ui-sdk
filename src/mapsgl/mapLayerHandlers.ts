@@ -1,4 +1,4 @@
-import { type AnyMapController, type ColorScaleOptions } from '@aerisweather/mapsgl';
+import { type AnyMapController, type ColorScaleOptions } from '@xweather/mapsgl';
 import { type LayerState } from '@/types/layer';
 import {
     buildWeatherLayerData,

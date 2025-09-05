@@ -1,5 +1,5 @@
 import { useMemo, useEffect } from 'react';
-import { type AnyMapController } from '@aerisweather/mapsgl';
+import { type AnyMapController } from '@xweather/mapsgl';
 import { MAP_EVENT_CONFIG } from '@/constants/mapController';
 import {
     type MapEventHandlers,

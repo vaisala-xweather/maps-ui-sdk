@@ -1,4 +1,4 @@
-import { WeatherLayerOptions, LayerType } from '@aerisweather/mapsgl';
+import { WeatherLayerOptions, LayerType } from '@xweather/mapsgl';
 
 export const customFiresStyle: Partial<WeatherLayerOptions> = {
     type: 'symbol' as LayerType,

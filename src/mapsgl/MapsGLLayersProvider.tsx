@@ -6,7 +6,7 @@ import {
     ReactNode,
     useCallback
 } from 'react';
-import { type ColorScaleOptions } from '@aerisweather/mapsgl';
+import { type ColorScaleOptions } from '@xweather/mapsgl';
 import { isEmpty } from '@aerisweather/javascript-utils';
 import { LAYER } from '@/constants/action';
 import {

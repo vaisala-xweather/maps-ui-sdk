@@ -56,13 +56,13 @@
         "nanoid": "^5.0.9"
     },
     "peerDependencies": {
-        "@aerisweather/mapsgl": "^1.7.3",
+        "@xweather/mapsgl": "^1.8.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0"
     },
     "devDependencies": {
         "@aerisweather/eslint-plugin": "^1.0.4",
-        "@aerisweather/mapsgl": "^1.7.3",
+        "@xweather/mapsgl": "^1.8.0",
         "@commitlint/cli": "^19.2.1",
         "@commitlint/config-conventional": "^19.1.0",
         "@rollup/plugin-alias": "^5.1.0",

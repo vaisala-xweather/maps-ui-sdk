@@ -1,4 +1,4 @@
-import { ColorScaleOptions } from '@aerisweather/mapsgl';
+import { ColorScaleOptions } from '@xweather/mapsgl';
 import { UnitSystem, UnitsByMeasurementType } from './units';
 
 /**

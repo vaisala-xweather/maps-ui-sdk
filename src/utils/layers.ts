@@ -4,7 +4,7 @@ import {
     type WeatherLayerConfiguration,
     type AnyMapController,
     type LayerType
-} from '@aerisweather/mapsgl';
+} from '@xweather/mapsgl';
 import {
     type LayerButtonOptionSetting,
     type LayerSettings,
