@@ -12,11 +12,6 @@
   resolved "https://registry.yarnpkg.com/@aerisweather/javascript-utils/-/javascript-utils-0.5.9.tgz#b92e4099a1b4437f8e2b6b311337ab142c8dc3e5"
   integrity sha512-FVBd8tIoROAaIyQVeDa73lhcN32bDig1DUWo8hAEEaFbMlstALucpXSTXhH4u9daHWxvtRQw5YKZsEjDhGw1AQ==
 
-"@aerisweather/mapsgl@^1.7.3":
-  version "1.7.3"
-  resolved "https://registry.yarnpkg.com/@aerisweather/mapsgl/-/mapsgl-1.7.3.tgz#9dad4a5b5820801fe1ab84e4a0da554577826603"
-  integrity sha512-smqqqSUCEcPSiohiEWW8dioy8UfXrE9jbURVxdsKEyoIg6xbFEc0vpPCgt2Wm1iHPSh6U1RypROxiPs1cQ4Eew==
-
 "@alloc/quick-lru@^5.2.0":
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/@alloc/quick-lru/-/quick-lru-5.2.0.tgz#7bf68b20c0a350f936915fcae06f58e32007ce30"
@@ -966,10 +961,10 @@
     "@types/babel__core" "^7.20.5"
     react-refresh "^0.14.0"
 
-"@xweather/maps-ui-sdk@^1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@xweather/maps-ui-sdk/-/maps-ui-sdk-1.0.5.tgz#1a22d5075cfe18b099462f1bac11b3372709e326"
-  integrity sha512-ai7MSyJezRKI4mmx5oeIX4aVTDAlAFn2rOQWUdaxbF+KHNXXp1m2Cdv3hp9HcGiR1iK5lbjRlmCCsn9uRPGPPA==
+"@xweather/maps-ui-sdk@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@xweather/maps-ui-sdk/-/maps-ui-sdk-1.0.6.tgz#1671ab9622a88ab87c881000195ff39bfade2794"
+  integrity sha512-vbG4x0FgdR3Z4hnhXAQHbIKEMIpxFReJR/plv81klgj78qYNig56BGyVaTRVRZIpcsMmbQoaMUU9hOKk6XMyGw==
   dependencies:
     "@aerisweather/javascript-utils" "^0.5.9"
     "@radix-ui/react-select" "^2.1.6"
@@ -979,8 +974,14 @@
     clsx "^2.1.0"
     date-fns "3.0.0"
     date-fns-tz "3.1.3"
+    deepmerge-ts "^7.1.5"
     framer-motion "^10.16.4"
     nanoid "^5.0.9"
+
+"@xweather/mapsgl@^1.8.0":
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/@xweather/mapsgl/-/mapsgl-1.8.0.tgz#2630c4454e29afe4671e934e8057e39662766b90"
+  integrity sha512-INZ5EcS4UUf2j+/h52Bg4GW7qUTrFaIvnqHmjtUVLculnCjkzJiMI+E05QwXLQtJyV1Egm8v94nlrzPnlBcJtw==
 
 acorn-jsx@^5.3.2:
   version "5.3.2"
@@ -1273,6 +1274,11 @@ deep-is@^0.1.3:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/deep-is/-/deep-is-0.1.4.tgz#a6f2dce612fadd2ef1f519b73551f17e85199831"
   integrity sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==
+
+deepmerge-ts@^7.1.5:
+  version "7.1.5"
+  resolved "https://registry.yarnpkg.com/deepmerge-ts/-/deepmerge-ts-7.1.5.tgz#ff818564007f5c150808d2b7b732cac83aa415ab"
+  integrity sha512-HOJkrhaYsweh+W+e74Yn7YStZOilkoPb6fycpwNLKzSPtruFs48nYis0zy5yJz1+ktUhHxoRDJ27RQAWLIJVJw==
 
 detect-node-es@^1.1.0:
   version "1.1.0"

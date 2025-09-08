@@ -1,4 +1,4 @@
-import { type WeatherLayerOptions } from '@aerisweather/mapsgl';
+import { type WeatherLayerOptions } from '@xweather/mapsgl';
 import { PaintStyleKeys } from '@/mapsgl/layerDataSchema';
 import { type ButtonGroupOptions } from '@/types/buttonList';
 import { type ControlSetting } from '@/types/control';

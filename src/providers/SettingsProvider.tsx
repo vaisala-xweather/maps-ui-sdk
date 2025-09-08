@@ -1,5 +1,5 @@
 import { createContext, useContext, useReducer, ReactNode, Reducer, useCallback } from 'react';
-import { styles, ColorScaleOptions } from '@aerisweather/mapsgl';
+import { styles, ColorScaleOptions } from '@xweather/mapsgl';
 import { NormalizedColorScaleName } from '@/types/colors';
 import { DEFAULT_UNITS, UNIT_SYSTEM } from '@/constants/units';
 import { NORMALIZED_COLOR_SCALES } from '@/constants/colors';

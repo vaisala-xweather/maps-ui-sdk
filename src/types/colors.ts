@@ -1,4 +1,4 @@
-import { ColorScaleOptions } from '@aerisweather/mapsgl';
+import { ColorScaleOptions } from '@xweather/mapsgl';
 import { NORMALIZED_COLOR_SCALES } from '@/constants/colors';
 
 export type ColorScaleStops = (number | string)[];

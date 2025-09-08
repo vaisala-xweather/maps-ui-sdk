@@ -4,7 +4,7 @@
 
 ## Maps UI SDK Demo Application
 
-![Maps UI SDK Demo Application](./screenshot.png)
+![Maps UI SDK Demo Application](https://raw.githubusercontent.com/vaisala-xweather/maps-ui-sdk/main/screenshot.png)
 
 ## MapsGL components
 

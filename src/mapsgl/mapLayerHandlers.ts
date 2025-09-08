@@ -1,4 +1,4 @@
-import { type AnyMapController, type ColorScaleOptions } from '@aerisweather/mapsgl';
+import { type AnyMapController, type ColorScaleOptions, type WeatherLayerOptions } from '@xweather/mapsgl';
 import { type LayerState } from '@/types/layer';
 import {
     buildWeatherLayerData,
@@ -36,10 +36,11 @@ export const addLayerToMap = (
             ? deepClone(layerConfig?.layer?.paint?.sample?.colorscale)
             : undefined;
 
-        const data = buildWeatherLayerData(
+        const data: Partial<WeatherLayerOptions> = buildWeatherLayerData(
             layer,
             colorScales,
-            defaultColorScale
+            defaultColorScale,
+            layerConfig
         );
         const insertBelowAdmin = shouldInsertBelowAdmin(layerConfig);
         const beforeId = insertBelowAdmin
@@ -87,8 +88,9 @@ export const updateMapLayerSetting = (
         const { id, value } = setting;
         const { layerId, weatherId, unitConversions } = layer;
 
+        // due to how MapsGL handles composite layers, we need to call getWeatherLayer instead of getLayer
         const mapLayer = isCompositeWeatherLayer(controller, layer)
-            ? controller.getWeatherLayer(layerId)
+            ? controller.getWeatherLayer(weatherId)
             : controller.getLayer(layerId);
 
         if (!mapLayer) return;

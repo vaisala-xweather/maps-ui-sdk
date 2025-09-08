@@ -9,8 +9,8 @@
         "preview": "vite preview"
     },
     "dependencies": {
-        "@xweather/maps-ui-sdk": "^1.0.6",
-        "@aerisweather/mapsgl": "^1.7.3",
+        "@xweather/maps-ui-sdk": "^1.0.7",
+        "@xweather/mapsgl": "^1.8.0",
         "mapbox-gl": "^3.2.0",
         "react": "^18.3.1",
         "react-dom": "^18.2.0"

@@ -1,6 +1,6 @@
 import { useRef, useCallback } from 'react';
-import { AnyMapController } from '@aerisweather/mapsgl';
-import '@aerisweather/mapsgl/dist/mapsgl.css';
+import { AnyMapController } from '@xweather/mapsgl';
+import '@xweather/mapsgl/dist/mapsgl.css';
 import { subHours, addHours } from 'date-fns';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import {

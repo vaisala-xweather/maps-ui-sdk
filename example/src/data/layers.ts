@@ -1,4 +1,4 @@
-import '@aerisweather/mapsgl/dist/mapsgl.css';
+import '@xweather/mapsgl/dist/mapsgl.css';
 import {
     type LayersConfig,
     LayerSchema,
@@ -36,14 +36,14 @@ export const layersConfig: LayersConfig = [{
                     precision: {
                         [UNITS.rate.dbz]: 0,
                         [UNITS.rate.inh]: 3,
-                        [UNITS.rate.mms]: 2
+                        [UNITS.rate.mmh]: 2
                     }
                 }
             }
 
         }, {
             name: LayerSchema.data.quality,
-            value: 'low'
+            value: 'exact'
         }]
 }, {
     id: 'satellite',

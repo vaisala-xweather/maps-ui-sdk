@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Account, type AnyMapController } from '@aerisweather/mapsgl';
+import { Account, type AnyMapController } from '@xweather/mapsgl';
 import { type MapEventHandlers, type MapControllerConfig } from '@/types/mapController';
 import { getMapController } from '@/utils/mapController';
 

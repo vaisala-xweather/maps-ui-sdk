@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react';
 import chroma, { type Scale, type Color } from 'chroma-js';
-import type { ColorScaleOptions } from '@aerisweather/mapsgl';
+import type { ColorScaleOptions } from '@xweather/mapsgl';
 import { ColorScaleStops, ColorScaleUnitConverter } from '@/types/colors';
 import { percent } from '@/utils/number';
 
