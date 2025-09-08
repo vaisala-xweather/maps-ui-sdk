@@ -36,7 +36,7 @@ export const alertsButton: LayerButtonOptions = {
 export const temperaturesButton: LayerButtonOptions = {
     id: 'temperatures',
     title: 'Temperatures (with boundaries)',
-    selected: true,
+    selected: false,
     value: {
         id: 'temperatures',
         overrides: {
@@ -187,7 +187,7 @@ export const feelsLikeButton: LayerButtonOptions = {
 export const windSpeedSegments: LayerSegmentedButtonOptions = {
     id: 'wind',
     title: 'Winds',
-    selected: false,
+    selected: true,
     multiselect: true,
     options: [{
         id: 'wind-barbs',
@@ -198,7 +198,7 @@ export const windSpeedSegments: LayerSegmentedButtonOptions = {
         id: 'wind-speeds',
         title: 'Fill',
         value: 'wind-speeds',
-        selected: true,
+        selected: false,
         settingsOptions: [{
             name: sample.colorscale.interval,
             value: 5,
