@@ -1,9 +1,11 @@
 import { get } from '@aerisweather/javascript-utils';
 import {
     type ColorScaleOptions,
+    type WeatherLayerOptions,
     type WeatherLayerConfiguration,
     type AnyMapController,
-    type LayerType
+    type LayerType,
+    type ExpressionSpecification
 } from '@xweather/mapsgl';
 import {
     type LayerButtonOptionSetting,
@@ -675,18 +677,56 @@ export const findFirstExistingLayerId = (controller: AnyMapController, layerIds?
     return layerIds.find((id) => controller.getLayer(id) !== undefined);
 };
 
+/**
+ * Extracts child IDs from a layer config, returning null if not composite.
+ */
+const childIdsFromLayerConfig = (
+    layerConfig: string[] | WeatherLayerConfiguration | undefined
+): readonly string[] | null => (Array.isArray(layerConfig) ? layerConfig : null);
+
+/**
+ * Applies a parent filter to composite child layers that lack an explicit filter.
+ */
+export const applyFilterToCompositeChildren = (
+    data: Readonly<Partial<WeatherLayerOptions>>,
+    childIds: readonly string[],
+    parentFilter: ExpressionSpecification
+): Partial<WeatherLayerOptions> => {
+    const existingChildLayers = data.childLayers ?? {};
+    let hasChanges = false;
+
+    const updatedChildLayers = childIds.reduce((childLayersAcc, childId) => {
+        const existingChild = (childLayersAcc[childId] ?? {}) as Partial<WeatherLayerOptions>;
+        if (existingChild.filter === undefined) {
+            hasChanges = true;
+            return { ...childLayersAcc, [childId]: { ...existingChild, filter: parentFilter } };
+        }
+        return childLayersAcc;
+    }, existingChildLayers);
+
+    return hasChanges ? { ...data, childLayers: updatedChildLayers } : data;
+};
+
 export const buildWeatherLayerData = (
     layer: LayerState,
     colorScales?: Record<string, ColorScaleOptions>,
-    defaultColorScale?: ColorScaleOptions
-) => {
+    defaultColorScale?: ColorScaleOptions,
+    layerConfig?: string[] | WeatherLayerConfiguration
+): Partial<WeatherLayerOptions> => {
     const { layerId, settings, overrides, unitConversions } = layer;
     const layerSettings = settings
         ? getLayerSettingsWithConvertedValues(settings, unitConversions, colorScales, defaultColorScale)
         : {};
-    const mergedSettingsWithOverrides = deepMerge(layerSettings, overrides?.layer ?? {});
-    mergedSettingsWithOverrides.id = layerId;
-    return mergedSettingsWithOverrides;
+
+    const merged = deepMerge(layerSettings, overrides?.layer ?? {}) as Partial<WeatherLayerOptions>;
+    const base: Partial<WeatherLayerOptions> = { ...merged, id: layerId };
+
+    const parentFilter = base.filter;
+    const childIds = childIdsFromLayerConfig(layerConfig);
+
+    if (!childIds || parentFilter == null) return base;
+
+    return applyFilterToCompositeChildren(base, childIds, parentFilter);
 };
 
 /**

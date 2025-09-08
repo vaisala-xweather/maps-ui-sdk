@@ -1,4 +1,4 @@
-import { type AnyMapController, type ColorScaleOptions } from '@xweather/mapsgl';
+import { type AnyMapController, type ColorScaleOptions, type WeatherLayerOptions } from '@xweather/mapsgl';
 import { type LayerState } from '@/types/layer';
 import {
     buildWeatherLayerData,
@@ -36,10 +36,11 @@ export const addLayerToMap = (
             ? deepClone(layerConfig?.layer?.paint?.sample?.colorscale)
             : undefined;
 
-        const data = buildWeatherLayerData(
+        const data: Partial<WeatherLayerOptions> = buildWeatherLayerData(
             layer,
             colorScales,
-            defaultColorScale
+            defaultColorScale,
+            layerConfig
         );
         const insertBelowAdmin = shouldInsertBelowAdmin(layerConfig);
         const beforeId = insertBelowAdmin
