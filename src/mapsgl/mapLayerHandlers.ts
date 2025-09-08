@@ -88,8 +88,9 @@ export const updateMapLayerSetting = (
         const { id, value } = setting;
         const { layerId, weatherId, unitConversions } = layer;
 
+        // due to how MapsGL handles composite layers, we need to call getWeatherLayer instead of getLayer
         const mapLayer = isCompositeWeatherLayer(controller, layer)
-            ? controller.getWeatherLayer(layerId)
+            ? controller.getWeatherLayer(weatherId)
             : controller.getLayer(layerId);
 
         if (!mapLayer) return;
