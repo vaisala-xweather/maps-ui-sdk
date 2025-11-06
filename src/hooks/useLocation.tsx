@@ -1,10 +1,10 @@
 import { useState, useMemo, useCallback, useEffect } from 'react';
-import type { Coordinates, UseLocationProps } from '@/types/location';
+import type { Coordinates, UseLocationProps, UseLocationReturn } from '@/types/location';
 import { formatCoordinates } from '@/utils/location';
 
 const coordinatesAreEqual = (
-    coordinatesA?: Coordinates,
-    coordinatesB?: Coordinates
+    coordinatesA: Coordinates | null,
+    coordinatesB: Coordinates | null
 ): boolean => {
     if (coordinatesA === coordinatesB) return true;
     if (!coordinatesA || !coordinatesB) return false;
@@ -18,12 +18,12 @@ export const useLocation = ({
     coordinates,
     onChange,
     formatter
-}: UseLocationProps) => {
-    const [value, setValue] = useState<Coordinates | undefined>(coordinates);
+}: UseLocationProps): UseLocationReturn => {
+    const [value, setValue] = useState<Coordinates | null>(coordinates ?? null);
 
     useEffect(() => {
-        if (!coordinatesAreEqual(coordinates, value)) {
-            setValue(coordinates);
+        if (!coordinatesAreEqual(coordinates ?? null, value)) {
+            setValue(coordinates ?? null);
         }
     }, [coordinates]);
 
@@ -37,14 +37,14 @@ export const useLocation = ({
         [value]
     );
 
-    const setCoordinates = useCallback((nextCoordinates: Coordinates) => {
+    const setCoordinates = useCallback((nextCoordinates: Coordinates | null) => {
         setValue((prev) => (
             coordinatesAreEqual(prev, nextCoordinates) ? prev : nextCoordinates
         ));
     }, []);
 
     useEffect(() => {
-        if (value && onChange) onChange(value);
+        if (onChange) onChange(value);
     }, [value, onChange]);
 
     return useMemo(() => ({
