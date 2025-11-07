@@ -12,9 +12,9 @@ import {
     useMemo
 } from 'react';
 import { debounce } from '@/utils/debounce';
-import { prepareRequest, formatResult } from '@/utils/search';
+import { prepareRequest, formatResult, getSearchQueryMeta } from '@/utils/search';
 import { UseWeatherApiRequest } from '@/mapsgl/useWeatherApi';
-import { SearchResult, SearchGroupType } from '@/types/search';
+import { SearchResult, SearchGroupType, SearchQueryMeta } from '@/types/search';
 
 export interface SearchContextProps {
     // Query
@@ -22,7 +22,9 @@ export interface SearchContextProps {
     setQuery: (query: string) => void;
     // Requests, visited
     requests: UseWeatherApiRequest[];
+    /** @deprecated Use recentSelections instead. */
     visitedLocations: SearchResult[];
+    recentSelections: SearchResult[];
     // Focus
     inputRef: RefObject<HTMLInputElement> | null;
     isFocused: boolean;
@@ -35,6 +37,8 @@ export interface SearchContextProps {
     searchGroups: SearchGroupType[];
     currentResults: SearchResult[];
     setCurrentResults: (results: SearchResult[]) => void;
+    queryMeta: SearchQueryMeta | undefined;
+    coordinatePrecision: number;
     // Recent/results list expanded state
     isExpanded: boolean;
     setIsExpanded: (expanded: boolean) => void;
@@ -45,8 +49,12 @@ export interface SearchContextProps {
     onFocus: () => void;
     onSelectResult: (result: SearchResult) => void;
     // Visited-locations management
+    /** @deprecated Use clearRecentSelections instead. */
     clearVisitedLocations: () => void;
+    clearRecentSelections: () => void;
+    /** @deprecated Use removeRecentSelection instead. */
     removeVisitedLocation: (identifier: { item: SearchResult; label?: string }) => void;
+    removeRecentSelection: (identifier: { item: SearchResult; label?: string }) => void;
 
 }
 
@@ -62,27 +70,56 @@ export const useSearchContext = () => {
 
 export interface SearchProviderProps {
     children: ReactNode;
+    maxRecentSelections?: number;
+    /** @deprecated Use maxRecentSelections instead. */
     maxVisitedLocations?: number;
     inputRef?: RefObject<HTMLInputElement>;
     searchGroups?: SearchGroupType[];
     resultFormatter?: (result: SearchResult) => string;
     onSelectResult?: (result: SearchResult) => void;
+    coordinatePrecision?: number;
+    // Controlled/uncontrolled query
+    query?: string;
+    onQueryChange?: (query: string) => void;
+    // Recent selections (controlled)
+    recentSelections?: SearchResult[];
+    onRecentSelectionsChange?: (items: SearchResult[]) => void;
+    /** @deprecated Use recentSelections instead. */
+    visitedLocations?: SearchResult[];
+    /** @deprecated Use onRecentSelectionsChange instead. */
+    onVisitedLocationsChange?: (items: SearchResult[]) => void;
+    onFocus?: () => void;
 }
 
 export const SearchProvider = ({
     children,
     onSelectResult,
     resultFormatter = formatResult,
-    maxVisitedLocations = 3,
+    maxRecentSelections,
+    maxVisitedLocations,
     inputRef: externalInputRef,
-    searchGroups = ['recent', 'places', 'stations']
+    searchGroups = ['recent', 'places', 'stations'],
+    coordinatePrecision = 6,
+    query: controlledQuery,
+    onQueryChange,
+    recentSelections,
+    onRecentSelectionsChange,
+    visitedLocations: visitedLocationsLegacy,
+    onVisitedLocationsChange,
+    onFocus: propsOnFocus
 }: SearchProviderProps) => {
     // Query, requests and recent/results state
-    const [query, setQuery] = useState('');
+    const [uncontrolledQuery, setUncontrolledQuery] = useState('');
+    const query = controlledQuery ?? uncontrolledQuery;
     const [selectedItem, setSelectedItem] = useState<SearchResult | null>(null);
     const [currentResults, setCurrentResults] = useState<SearchResult[]>([]);
     const [requests, setRequests] = useState<UseWeatherApiRequest[]>([]);
-    const [visitedLocations, setVisitedLocations] = useState<SearchResult[]>([]);
+    const [uncontrolledRecentSelections, setUncontrolledRecentSelections] = useState<SearchResult[]>([]);
+    const controlledRecentsProp = recentSelections ?? visitedLocationsLegacy;
+    const isRecentsControlled = controlledRecentsProp !== undefined;
+    const resolvedRecentSelections = controlledRecentsProp ?? uncontrolledRecentSelections;
+    const effectiveOnRecentsChange = onRecentSelectionsChange ?? onVisitedLocationsChange;
+    const effectiveMaxRecents = maxRecentSelections ?? maxVisitedLocations ?? 3;
     // UI state
     const [isFocused, setIsFocused] = useState(false);
     const [activeDescendantId, setActiveDescendantId] = useState<string | null>(null);
@@ -90,6 +127,50 @@ export const SearchProvider = ({
     // Input ref management
     const internalInputRef = useRef<HTMLInputElement>(null);
     const inputRef = externalInputRef || internalInputRef;
+
+    useEffect(() => {
+        if (process.env.NODE_ENV !== 'development') return;
+
+        if (maxVisitedLocations !== undefined) {
+            console.warn('maxVisitedLocations is deprecated. Use maxRecentSelections instead.');
+        }
+        if (visitedLocationsLegacy !== undefined) {
+            console.warn('visitedLocations is deprecated. Use recentSelections instead.');
+        }
+        if (onVisitedLocationsChange) {
+            console.warn('onVisitedLocationsChange is deprecated. Use onRecentSelectionsChange instead.');
+        }
+    }, [maxVisitedLocations, visitedLocationsLegacy, onVisitedLocationsChange]);
+
+    const queryMeta = useMemo<SearchQueryMeta | undefined>(() => getSearchQueryMeta(query), [query]);
+
+    const wrappedFormatter = useCallback((result: SearchResult) => {
+        if (resultFormatter === formatResult) {
+            return formatResult(result, coordinatePrecision);
+        }
+        return resultFormatter(result);
+    }, [resultFormatter, coordinatePrecision]);
+
+    const setQuery = useCallback((next: string) => {
+        onQueryChange?.(next);
+        if (controlledQuery === undefined) {
+            setUncontrolledQuery(next);
+        }
+    }, [controlledQuery, onQueryChange]);
+
+    const updateRecentSelections = useCallback((compute: (prev: SearchResult[]) => SearchResult[]) => {
+        if (isRecentsControlled) {
+            const previous = controlledRecentsProp ?? [];
+            const next = compute(previous);
+            effectiveOnRecentsChange?.(next);
+        } else {
+            setUncontrolledRecentSelections((prev) => {
+                const next = compute(prev);
+                effectiveOnRecentsChange?.(next);
+                return next;
+            });
+        }
+    }, [isRecentsControlled, controlledRecentsProp, effectiveOnRecentsChange]);
 
     const debouncedSearch = useMemo(
         () => debounce((queryString: string) => {
@@ -99,9 +180,10 @@ export const SearchProvider = ({
     );
 
     useEffect(() => {
-        if (query.trim()) {
+        const trimmedQuery = query.trim();
+        if (trimmedQuery) {
             if (!selectedItem) {
-                debouncedSearch(query);
+                debouncedSearch(trimmedQuery);
             }
         } else {
             setRequests([]);
@@ -115,11 +197,12 @@ export const SearchProvider = ({
         if (selectedItem) {
             setSelectedItem(null);
         }
-    }, [selectedItem]);
+    }, [setQuery, selectedItem]);
 
     const handleFocus = useCallback(() => {
         setIsFocused(true);
-    }, []);
+        propsOnFocus?.();
+    }, [propsOnFocus]);
 
     const focusInput = useCallback(() => {
         setIsFocused(true);
@@ -133,43 +216,44 @@ export const SearchProvider = ({
             setCurrentResults([]);
             setSelectedItem(result);
 
-            if (resultFormatter) {
-                setQuery(resultFormatter?.(result));
-            }
+            setQuery(wrappedFormatter(result));
 
-            setVisitedLocations((prev) => {
-                const formattedResult = resultFormatter?.(result) ?? result;
+            updateRecentSelections((prev) => {
+                const formattedResult = wrappedFormatter(result);
                 const filtered = prev.filter((location) => {
-                    const formattedLocation = resultFormatter?.(location) ?? location;
+                    const formattedLocation = wrappedFormatter(location);
                     return formattedLocation !== formattedResult;
                 });
-                return [result, ...filtered].slice(0, maxVisitedLocations);
+                return [result, ...filtered].slice(0, effectiveMaxRecents);
             });
 
             onSelectResult?.(result);
         },
-        [onSelectResult, resultFormatter, maxVisitedLocations]
+        [onSelectResult, wrappedFormatter, effectiveMaxRecents, setQuery, updateRecentSelections]
     );
 
-    const clearVisitedLocations = useCallback(() => {
-        setVisitedLocations([]);
+    const clearRecentSelections = useCallback(() => {
+        updateRecentSelections(() => []);
         focusInput();
-    }, [focusInput]);
+    }, [focusInput, updateRecentSelections]);
 
-    const removeVisitedLocation = useCallback(
+    const removeRecentSelection = useCallback(
         ({ item, label }: { item: SearchResult; label?: string }) => {
-            setVisitedLocations((prev) => {
-                const itemLabel = label ?? resultFormatter?.(item);
+            updateRecentSelections((prev) => {
+                const itemLabel = label ?? wrappedFormatter(item);
                 const filtered = prev.filter((loc) => {
-                    const locLabel = resultFormatter?.(loc);
+                    const locLabel = wrappedFormatter(loc);
                     return locLabel !== itemLabel;
                 });
                 if (filtered.length === 0) focusInput();
                 return filtered;
             });
         },
-        [focusInput, resultFormatter]
+        [focusInput, wrappedFormatter, updateRecentSelections]
     );
+
+    const clearVisitedLocations = clearRecentSelections;
+    const removeVisitedLocation = removeRecentSelection;
 
     return (
         <SearchContext.Provider
@@ -187,23 +271,28 @@ export const SearchProvider = ({
                 setActiveDescendantId,
                 // Search requests and visited locations
                 requests,
-                visitedLocations,
+                visitedLocations: resolvedRecentSelections,
+                recentSelections: resolvedRecentSelections,
                 // Search results
                 searchGroups,
                 currentResults,
                 setCurrentResults,
+                queryMeta,
+                coordinatePrecision,
                 // Recent/results list expanded state
                 isExpanded,
                 setIsExpanded,
                 // Optional result formatting
-                resultFormatter,
+                resultFormatter: wrappedFormatter,
                 // Event handlers
                 onChange: handleChange,
                 onFocus: handleFocus,
                 onSelectResult: handleResultClick,
                 // Visited locations management
                 clearVisitedLocations,
-                removeVisitedLocation
+                clearRecentSelections,
+                removeVisitedLocation,
+                removeRecentSelection
             }}
         >
             {children}

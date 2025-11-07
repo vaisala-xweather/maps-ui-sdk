@@ -1,9 +1,60 @@
-import { SearchResult, SearchGroupType } from '@/types/search';
+import { SearchResult, SearchGroupType, SearchQueryMeta, Location } from '@/types/search';
 import { UseWeatherApiRequest } from '@/mapsgl/useWeatherApi';
 import { WEATHER_API_ACTION } from '@/constants/weatherApi/action';
 import { STATES, COUNTRIES } from '@/constants/location';
 import { capitalizeWords, sanitizeText } from '@/utils/text';
-import { isCoordinate, isZipCode } from '@/utils/location';
+import { isCoordinate, isZipCode, isAirportCode, parseCoordinates, formatCoordinates } from '@/utils/location';
+import { Coordinates } from '@/types/location';
+
+/**
+ * Converts SDK Coordinates (lat, lon) to API Location (lat,long).
+ * Use when synthesizing SearchResults from parsed coordinates.
+ */
+export const coordinatesToLocation = (coords: Coordinates): Location => ({
+    lat: coords.lat,
+    long: coords.lon
+});
+
+/**
+ * Classifies the raw user query so higher layers can understand intent
+ * (coordinate vs text, etc.) without duplicating parsing logic.
+ */
+export const getSearchQueryMeta = (rawQuery: string): SearchQueryMeta | undefined => {
+    const original = rawQuery;
+    const query = rawQuery.trim();
+
+    if (!query) return undefined;
+
+    if (isCoordinate(query)) {
+        const coordinates = parseCoordinates(query);
+        if (coordinates) {
+            return {
+                type: 'coordinate',
+                original,
+                coordinates
+            } satisfies SearchQueryMeta;
+        }
+    }
+
+    if (isAirportCode(query)) {
+        return {
+            type: 'airport',
+            original
+        } satisfies SearchQueryMeta;
+    }
+
+    if (isZipCode(query)) {
+        return {
+            type: 'zip',
+            original
+        } satisfies SearchQueryMeta;
+    }
+
+    return {
+        type: 'text',
+        original
+    } satisfies SearchQueryMeta;
+};
 
 export const getMatches = (data: Record<string, string>, value: string): string[] => {
     const regex = new RegExp(`^${value}`, 'i');
@@ -115,7 +166,20 @@ export const prepareRequest = (
     return requests;
 };
 
-export const formatResult = (result: SearchResult) => {
+/**
+ * Default label generator used by the Search component.
+ * Coordinate queries surface the normalized coordinates by default.
+ * Consumers can provide their own formatter to display nearest place instead.
+ */
+export const formatResult = (result: SearchResult, precision = 6) => {
+    const coordinates = result.queryMeta?.type === 'coordinate'
+        ? result.queryMeta.coordinates
+        : undefined;
+
+    if (coordinates) {
+        return formatCoordinates(coordinates, precision);
+    }
+
     if ('place' in result) {
         const { place } = result;
         const parts = [

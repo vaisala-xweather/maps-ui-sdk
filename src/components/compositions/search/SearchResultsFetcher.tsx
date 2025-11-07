@@ -4,14 +4,19 @@ import { useDataContext } from '@/providers/DataProvider';
 import { useLoadingContext } from '@/providers/LoadingProvider';
 import { isArray } from '@aerisweather/javascript-utils';
 import { nanoid } from 'nanoid';
-import { ApiResponse, SearchGroupType, SearchResult } from '@/types/search';
+import { ApiResponse, SearchGroupType, SearchResult, SearchQueryMeta } from '@/types/search';
+import { coordinatesToLocation } from '@/utils/search';
 import { useSearchContext } from './SearchProvider';
 
 const areValidSearchResults = (value: unknown): value is SearchResult[] => (
     Array.isArray(value)
     && value.every((item) => 'loc' in item && (('id' in item) || ('place' in item && 'profile' in item))));
 
-const useProcessResults = (apiResponse: ApiResponse[] | null, searchGroups: SearchGroupType[]) => useMemo(() => {
+const useProcessResults = (
+    apiResponse: ApiResponse[] | null,
+    searchGroups: SearchGroupType[],
+    queryMeta: SearchQueryMeta | undefined
+) => useMemo(() => {
     if (!apiResponse) return [];
 
     try {
@@ -39,23 +44,37 @@ const useProcessResults = (apiResponse: ApiResponse[] | null, searchGroups: Sear
                 groupedResults[groupType].push({
                     ...data,
                     trackingId,
-                    groupType
+                    groupType,
+                    queryMeta
                 });
             });
         });
+
+        if (
+            queryMeta?.type === 'coordinate'
+            && queryMeta.coordinates
+            && groupedResults.places.length === 0
+        ) {
+            groupedResults.places.push({
+                loc: coordinatesToLocation(queryMeta.coordinates),
+                trackingId: `coord:${queryMeta.coordinates.lat},${queryMeta.coordinates.lon}`,
+                groupType: 'places',
+                queryMeta
+            } as SearchResult);
+        }
 
         return searchGroups.flatMap((group) => groupedResults[group] || []);
     } catch (error) {
         console.error('Error processing weather data:', error);
         return [];
     }
-}, [apiResponse, searchGroups]);
+}, [apiResponse, searchGroups, queryMeta]);
 
 const ResultsProcessor = ({ children }: { children: ReactNode }) => {
     const { data, loading } = useDataContext() ?? { loading: false };
     const { setLoading } = useLoadingContext();
-    const { setCurrentResults, searchGroups } = useSearchContext();
-    const processedResults = useProcessResults(data, searchGroups);
+    const { setCurrentResults, searchGroups, queryMeta } = useSearchContext();
+    const processedResults = useProcessResults(data, searchGroups, queryMeta);
 
     useEffect(() => {
         setLoading(loading, 0);
