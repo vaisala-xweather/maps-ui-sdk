@@ -3,12 +3,12 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Search, type SearchProps } from '@/components/compositions/search/index';
 import { SearchResult, SearchGroupType } from '@/types/search';
 import { Fade } from '@/components/primitives/animation/Fade';
-import { formatResult } from '@/utils/search';
 import { useSearchContext } from '@/components/compositions/search/SearchProvider';
 import { SearchGroupTitle } from '@/components/compositions/search/SearchGroupTitle';
 import { THEME } from '@/constants/theme';
 import { useResponsive } from '@/hooks/useResponsive';
 import { HStack } from '@/components/primitives/layout/Stack';
+import { formatResult } from '@/utils/search';
 
 export interface SearchGroupConfig {
     type: SearchGroupType;
@@ -20,20 +20,21 @@ export type MapsGLSearchControlProps = Omit<SearchProps, 'children'> & {
     className?: string;
     searchGroups?: SearchGroupType[];
     placeholder?: string;
+    coordinatePrecision?: number;
     onGeoLocationError?: (error: GeolocationPositionError) => void;
 };
 
 const RecentResults = () => {
-    const { visitedLocations, clearVisitedLocations, removeVisitedLocation, activeDescendantId } = useSearchContext();
+    const { recentSelections, clearRecentSelections, removeRecentSelection, activeDescendantId } = useSearchContext();
 
-    if (visitedLocations.length === 0) return null;
+    if (recentSelections.length === 0) return null;
 
     return (
         <Search.List>
             <Search.ScrollableArea
                 className="xw-py-2.5 xw-mt-2 xw-rounded-xl xw-shadow-lg xw-bg-white xw-max-h-[540px]"
             >
-                <Search.Group className="xw-py-4" onClear={clearVisitedLocations}
+                <Search.Group className="xw-py-4" onClear={clearRecentSelections}
                 >
                     <div className="xw-px-4">
                         <Search.Divider className="xw-border-t-2 xw-border-slate-900" />
@@ -43,7 +44,7 @@ const RecentResults = () => {
                         </HStack>
                     </div>
                     <AnimatePresence initial={false}>
-                        {visitedLocations.map((item, index) => (
+                        {recentSelections.map((item, index) => (
                             <motion.div
                                 key={item.trackingId ?? index}
                                 animate={{ height: 'auto', opacity: 1 }}
@@ -61,15 +62,15 @@ const RecentResults = () => {
                                 <Search.Item
                                     item={item}
                                     className="data-[active]:xw-bg-secondary-50 group"
-                                    onClear={() => removeVisitedLocation({ item })}
+                                    onClear={() => removeRecentSelection({ item })}
                                 >
                                     <Search.ItemButton className="xw-text-[13px] xw-pl-4 xw-py-2" />
                                     <Search.Clear
-                                        className={
-                                            `xw-w-5 xw-h-5 xw-rounded-full xw-mx-4 ${activeDescendantId === item.trackingId
+                                        className={`xw-w-5 xw-h-5 xw-rounded-full xw-mx-4 ${
+                                            activeDescendantId === item.trackingId
                                                 ? 'xw-text-white xw-bg-secondary-400'
-                                                : 'xw-text-slate-500 xw-bg-slate-100'}`
-                                        }
+                                                : 'xw-text-slate-500 xw-bg-slate-100'
+                                        }`}
                                         iconProps={{ size: 8 }}
                                     />
                                 </Search.Item>
@@ -122,7 +123,7 @@ const SearchResults = () => {
 };
 
 const SearchContent = () => {
-    const { query, visitedLocations, isFocused } = useSearchContext();
+    const { query, recentSelections, isFocused } = useSearchContext();
     const { breakpoint } = useResponsive();
     const isMobile = breakpoint === 'base';
 
@@ -130,7 +131,7 @@ const SearchContent = () => {
         <Search.ResultsFetcher>
             <Search.ResultsData>
                 {({ hasResults }) => {
-                    const shouldShowRecent = Boolean((isFocused) && !query && visitedLocations.length > 0);
+                    const shouldShowRecent = Boolean((isFocused) && !query && recentSelections.length > 0);
                     const shouldShowResults = Boolean((isMobile || isFocused) && query && hasResults);
 
                     return (
@@ -154,19 +155,31 @@ const SearchContent = () => {
 };
 
 export const MapsGLSearchControl = ({
-    resultFormatter,
-    onSelectResult,
     className = '',
+    resultFormatter = formatResult,
+    coordinatePrecision = 6,
     placeholder = 'Search locations',
     inputRef,
     searchGroups = ['recent', 'places', 'stations'],
-    onGeoLocationError
+    recentSelections,
+    query,
+    onFocus,
+    onQueryChange,
+    onRecentSelectionsChange,
+    onGeoLocationError,
+    onSelectResult
 }: MapsGLSearchControlProps) => (
     <Search
         inputRef={inputRef}
-        onSelectResult={onSelectResult}
         resultFormatter={resultFormatter}
-        searchGroups={searchGroups}>
+        searchGroups={searchGroups}
+        coordinatePrecision={coordinatePrecision}
+        query={query}
+        recentSelections={recentSelections}
+        onQueryChange={onQueryChange}
+        onRecentSelectionsChange={onRecentSelectionsChange}
+        onFocus={onFocus}
+        onSelectResult={onSelectResult}>
         <Search.FocusArea className={className}>
             <Search.Bar className="xw-gap-2 xw-border-2 xw-border-transparent xw-bg-white xw-rounded-xl
                 xw-h-11 xw-pl-3 xw-pr-2 xw-py-2 xw-focus-within:xw-border-2 xw-focus-within:xw-border-secondary-200">
