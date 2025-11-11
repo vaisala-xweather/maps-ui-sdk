@@ -23,7 +23,7 @@ const InnerProviders = ({
 }: AppProvidersProps) => {
     const { setModalData } = useModalContext();
 
-    const handleChange = useCallback((coordinates: Coordinates) => {
+    const handleChange = useCallback((coordinates: Coordinates | null) => {
         if (coordinates) {
             setModalData({ id: 'data-viewer' });
         }
