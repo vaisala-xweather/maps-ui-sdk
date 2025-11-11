@@ -17,7 +17,7 @@ export const SearchInput = ({
     const {
         query,
         currentResults,
-        visitedLocations,
+        recentSelections,
         activeDescendantId,
         setActiveDescendantId,
         onSelectResult,
@@ -27,7 +27,7 @@ export const SearchInput = ({
         isExpanded
     } = useSearchContext();
     const { handleKeyDown } = useComboBoxKeyboard({
-        items: [...currentResults, ...visitedLocations],
+        items: [...currentResults, ...recentSelections],
         activeDescendantId,
         setActiveDescendantId,
         onSelectResult

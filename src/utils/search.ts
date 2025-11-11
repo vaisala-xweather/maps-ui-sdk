@@ -1,9 +1,66 @@
-import { SearchResult, SearchGroupType } from '@/types/search';
+import { SearchResult, SearchGroupType, SearchQueryMeta, Location } from '@/types/search';
 import { UseWeatherApiRequest } from '@/mapsgl/useWeatherApi';
 import { WEATHER_API_ACTION } from '@/constants/weatherApi/action';
 import { STATES, COUNTRIES } from '@/constants/location';
 import { capitalizeWords, sanitizeText } from '@/utils/text';
-import { isCoordinate, isZipCode } from '@/utils/location';
+import { isCoordinate, isZipCode, isAirportCode, parseCoordinates, formatCoordinates } from '@/utils/location';
+import { Coordinates } from '@/types/location';
+
+/**
+ * Converts SDK Coordinates (lat, lon) to API Location (lat,long).
+ */
+export const coordinatesToLocation = (coords: Coordinates): Location => ({
+    lat: coords.lat,
+    long: coords.lon
+});
+
+/**
+ * Converts API Location (lat, long) to SDK Coordinates (lat, lon).
+ */
+export const locationToCoordinates = (location: Location): Coordinates => ({
+    lat: location.lat,
+    lon: location.long
+});
+
+/**
+ * Classifies the raw user query so higher layers can understand intent
+ * (coordinate vs text, etc.) without duplicating parsing logic.
+ */
+export const getSearchQueryMeta = (rawQuery: string): SearchQueryMeta | undefined => {
+    const original = rawQuery;
+    const query = rawQuery.trim();
+
+    if (!query) return undefined;
+
+    if (isCoordinate(query)) {
+        const coordinates = parseCoordinates(query);
+        if (coordinates) {
+            return {
+                type: 'coordinate',
+                original
+            } satisfies SearchQueryMeta;
+        }
+    }
+
+    if (isAirportCode(query)) {
+        return {
+            type: 'airport',
+            original
+        } satisfies SearchQueryMeta;
+    }
+
+    if (isZipCode(query)) {
+        return {
+            type: 'zip',
+            original
+        } satisfies SearchQueryMeta;
+    }
+
+    return {
+        type: 'text',
+        original
+    } satisfies SearchQueryMeta;
+};
 
 export const getMatches = (data: Record<string, string>, value: string): string[] => {
     const regex = new RegExp(`^${value}`, 'i');
@@ -88,12 +145,15 @@ export const prepareRequest = (
     const requests: UseWeatherApiRequest[] = [];
 
     if (isCoordinate(sanitizedQuery)) {
-        requests.push({
-            endpoint: 'places',
-            action: WEATHER_API_ACTION.closest,
-            params: { p: sanitizedQuery }
-        });
-        return requests;
+        const coordinates = parseCoordinates(sanitizedQuery);
+        if (coordinates) {
+            requests.push({
+                endpoint: 'places',
+                action: WEATHER_API_ACTION.closest,
+                params: { p: `${coordinates.lat},${coordinates.lon}` }
+            });
+            return requests;
+        }
     }
 
     if (isZipCode(sanitizedQuery)) {
@@ -115,8 +175,17 @@ export const prepareRequest = (
     return requests;
 };
 
-export const formatResult = (result: SearchResult) => {
-    if ('place' in result) {
+/**
+ * Default label generator used by the Search component.
+ * Coordinate queries surface the normalized coordinates by default.
+ * Consumers can provide their own formatter to display nearest place instead.
+ */
+export const formatResult = (result: SearchResult, precision = 6) => {
+    if (result.queryMeta?.type === 'coordinate') {
+        return formatCoordinates(result.coordinates, precision);
+    }
+
+    if (result.place && 'place' in result) {
         const { place } = result;
         const parts = [
             capitalizeWords(place.name),
@@ -128,7 +197,7 @@ export const formatResult = (result: SearchResult) => {
     }
 
     // primarily for stations
-    if ('id' in result) {
+    if (result.id && 'id' in result) {
         return result.id.replace(/^.*?_/, '');
     }
 

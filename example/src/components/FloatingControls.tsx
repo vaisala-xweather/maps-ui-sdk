@@ -72,9 +72,9 @@ const FloatingTabContent = ({ buttonsRef }: FloatingTabContentProps) => {
     const searchInputRef = useRef<HTMLInputElement>(null);
 
     const handleSearchResult = useCallback((result: SearchResult) => {
-        const { loc: { lat, long } } = result;
-        setCoordinates({ lat, lon: long });
-        flyTo(lat, long, 7);
+        const { coordinates } = result;
+        setCoordinates(coordinates);
+        flyTo(coordinates.lat, coordinates.lon, 7);
         close();
     }, [setCoordinates, flyTo, close]);
 

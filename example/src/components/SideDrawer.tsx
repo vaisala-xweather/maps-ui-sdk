@@ -96,7 +96,7 @@ const DrawerButton = ({
 };
 
 const DrawerTriggerButtons = () => (
-    <Anchor.TopLeft className="z-90">
+    <Anchor.TopLeft className="z-80">
         <Box className="sm:flex-col">
             <DrawerTriggerButton
                 icon={StackIcon}

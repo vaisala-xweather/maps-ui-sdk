@@ -4,7 +4,7 @@ import {
     ReactNode
 } from 'react';
 import { useLocation } from '@/hooks/useLocation';
-import type { Coordinates, FormattedCoordinates, UseLocationProps } from '@/types/location';
+import type { UseLocationProps, UseLocationReturn } from '@/types/location';
 
 export interface LocationProviderProps extends UseLocationProps {
   children: ReactNode
@@ -13,22 +13,13 @@ export interface LocationProviderProps extends UseLocationProps {
 /**
  * Context value interface providing location state and actions.
  */
-export interface LocationContextValue {
-    /** Current coordinates, undefined until first value is set */
-    coordinates?: Coordinates;
-    /** Structured formatted coordinates, null if no coordinates set or no formatter provided */
-    formattedCoordinates?: FormattedCoordinates | null;
-    /** Formatted coordinate string for display purposes, null if no coordinates set */
-    coordinatesString?: string | null;
-    /** Coordinate setter */
-    setCoordinates: (coordinates: Coordinates) => void;
-}
+export type LocationContextValue = UseLocationReturn;
 
 /**
  * Context for sharing location state across the component tree.
  */
 export const LocationContext = createContext<LocationContextValue>({
-    coordinates: undefined,
+    coordinates: null,
     formattedCoordinates: null,
     coordinatesString: null,
     setCoordinates: () => {
