@@ -4,15 +4,24 @@ import { useDataContext } from '@/providers/DataProvider';
 import { useLoadingContext } from '@/providers/LoadingProvider';
 import { isArray } from '@aerisweather/javascript-utils';
 import { nanoid } from 'nanoid';
-import { ApiResponse, SearchGroupType, SearchResult, SearchQueryMeta } from '@/types/search';
-import { coordinatesToLocation } from '@/utils/search';
+import { ApiResponse, ApiSearchResult, SearchGroupType, SearchResult, SearchQueryMeta } from '@/types/search';
+import { Coordinates } from '@/types/location';
+import { parseCoordinates } from '@/utils/location';
+import { locationToCoordinates } from '@/utils/search';
 import { useSearchContext } from './SearchProvider';
 
-const areValidSearchResults = (value: unknown): value is SearchResult[] => (
+const areValidSearchResults = (value: unknown): value is ApiSearchResult[] => (
     Array.isArray(value)
     && value.every((item) => 'loc' in item && (('id' in item) || ('place' in item && 'profile' in item))));
 
-const useProcessResults = (
+const createSyntheticCoordinateResult = (coordinates: Coordinates, queryMeta: SearchQueryMeta): SearchResult => ({
+    trackingId: `coord:${coordinates.lat},${coordinates.lon}`,
+    groupType: 'places',
+    queryMeta,
+    coordinates
+});
+
+const useProcessedResults = (
     apiResponse: ApiResponse[] | null,
     searchGroups: SearchGroupType[],
     queryMeta: SearchQueryMeta | undefined
@@ -25,6 +34,9 @@ const useProcessResults = (
             places: [],
             recent: []
         };
+        const queryCoordinates = queryMeta?.type === 'coordinate'
+            ? parseCoordinates(queryMeta.original)
+            : null;
 
         apiResponse.forEach((requestResponse) => {
             const responseData = isArray(requestResponse?.response)
@@ -40,27 +52,26 @@ const useProcessResults = (
             responseData.forEach((data) => {
                 const trackingId = 'id' in data ? data.id : nanoid();
                 const groupType = isObservation ? 'stations' : 'places';
+                const coordinates = queryCoordinates ?? locationToCoordinates(data.loc);
 
                 groupedResults[groupType].push({
                     ...data,
                     trackingId,
                     groupType,
-                    queryMeta
+                    queryMeta,
+                    coordinates
                 });
             });
         });
 
         if (
             queryMeta?.type === 'coordinate'
-            && queryMeta.coordinates
+            && queryCoordinates
             && groupedResults.places.length === 0
         ) {
-            groupedResults.places.push({
-                loc: coordinatesToLocation(queryMeta.coordinates),
-                trackingId: `coord:${queryMeta.coordinates.lat},${queryMeta.coordinates.lon}`,
-                groupType: 'places',
-                queryMeta
-            } as SearchResult);
+            groupedResults.places.push(
+                createSyntheticCoordinateResult(queryCoordinates, queryMeta)
+            );
         }
 
         return searchGroups.flatMap((group) => groupedResults[group] || []);
@@ -74,7 +85,7 @@ const ResultsProcessor = ({ children }: { children: ReactNode }) => {
     const { data, loading } = useDataContext() ?? { loading: false };
     const { setLoading } = useLoadingContext();
     const { setCurrentResults, searchGroups, queryMeta } = useSearchContext();
-    const processedResults = useProcessResults(data, searchGroups, queryMeta);
+    const processedResults = useProcessedResults(data, searchGroups, queryMeta);
 
     useEffect(() => {
         setLoading(loading, 0);

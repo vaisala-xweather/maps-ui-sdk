@@ -8,11 +8,18 @@ import { Coordinates } from '@/types/location';
 
 /**
  * Converts SDK Coordinates (lat, lon) to API Location (lat,long).
- * Use when synthesizing SearchResults from parsed coordinates.
  */
 export const coordinatesToLocation = (coords: Coordinates): Location => ({
     lat: coords.lat,
     long: coords.lon
+});
+
+/**
+ * Converts API Location (lat, long) to SDK Coordinates (lat, lon).
+ */
+export const locationToCoordinates = (location: Location): Coordinates => ({
+    lat: location.lat,
+    lon: location.long
 });
 
 /**
@@ -30,8 +37,7 @@ export const getSearchQueryMeta = (rawQuery: string): SearchQueryMeta | undefine
         if (coordinates) {
             return {
                 type: 'coordinate',
-                original,
-                coordinates
+                original
             } satisfies SearchQueryMeta;
         }
     }
@@ -139,12 +145,15 @@ export const prepareRequest = (
     const requests: UseWeatherApiRequest[] = [];
 
     if (isCoordinate(sanitizedQuery)) {
-        requests.push({
-            endpoint: 'places',
-            action: WEATHER_API_ACTION.closest,
-            params: { p: sanitizedQuery }
-        });
-        return requests;
+        const coordinates = parseCoordinates(sanitizedQuery);
+        if (coordinates) {
+            requests.push({
+                endpoint: 'places',
+                action: WEATHER_API_ACTION.closest,
+                params: { p: `${coordinates.lat},${coordinates.lon}` }
+            });
+            return requests;
+        }
     }
 
     if (isZipCode(sanitizedQuery)) {
@@ -172,15 +181,11 @@ export const prepareRequest = (
  * Consumers can provide their own formatter to display nearest place instead.
  */
 export const formatResult = (result: SearchResult, precision = 6) => {
-    const coordinates = result.queryMeta?.type === 'coordinate'
-        ? result.queryMeta.coordinates
-        : undefined;
-
-    if (coordinates) {
-        return formatCoordinates(coordinates, precision);
+    if (result.queryMeta?.type === 'coordinate') {
+        return formatCoordinates(result.coordinates, precision);
     }
 
-    if ('place' in result) {
+    if (result.place && 'place' in result) {
         const { place } = result;
         const parts = [
             capitalizeWords(place.name),
@@ -192,7 +197,7 @@ export const formatResult = (result: SearchResult, precision = 6) => {
     }
 
     // primarily for stations
-    if ('id' in result) {
+    if (result.id && 'id' in result) {
         return result.id.replace(/^.*?_/, '');
     }
 
