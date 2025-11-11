@@ -1,6 +1,6 @@
 {
     "name": "@xweather/maps-ui-sdk",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "description": "A React UI toolkit for enhancing mapping interfaces with interactive UI controls",
     "license": "MIT",
     "author": "Xweather",
