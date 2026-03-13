@@ -18,8 +18,7 @@ export type UseWeatherApiProps = Partial<UseWeatherApiRequest> & {
 const defaultRequestOptionsByEndpoint = {
     forecasts: {
         params: {
-            filter: '1day',
-            limit: 7
+            filter: '1day'
         }
     },
     alerts: {

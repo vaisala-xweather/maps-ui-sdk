@@ -4,7 +4,7 @@ import { useLocationContext } from '@/providers/LocationProvider';
 import { WeatherApiDataFetcher } from '@/components/data/api/WeatherApiDataFetcher';
 import { IconButton } from '@/components/primitives/buttons/IconButton';
 import { DATA_VIEW_CONFIG } from '@/constants/forecast';
-import { DataView } from '@/types/forecast';
+import { ForecastDataView } from '@/types/forecast';
 import { HStack } from '@/components/primitives/layout/Stack';
 import { IconProps } from '@/components/primitives/display/Icon';
 import { TemperatureIcon, WindIcon, UmbrellaIcon, SnowIcon } from '@/components/compositions/icons/Icon';
@@ -12,10 +12,10 @@ import * as Tooltip from '@radix-ui/react-tooltip';
 import { OutlookView } from '../OutlookView';
 
 export interface ForecastBaseViewProps {
-    dataView: DataView;
+    dataView: ForecastDataView;
     controlSlot: ReactNode;
     children: ReactNode;
-    setDataView: (data: DataView) => void
+    setDataView: (data: ForecastDataView) => void
 }
 
 const DATA_VIEW_BUTTON_CONFIGS = [{
@@ -36,6 +36,7 @@ const DATA_VIEW_BUTTON_CONFIGS = [{
     label: 'Snowfall'
 }];
 
+/** @deprecated Use `<Forecast.View />` inside `<Forecast.Root>` instead. */
 export const ForecastBaseView = ({
     children,
     controlSlot,
@@ -44,7 +45,7 @@ export const ForecastBaseView = ({
 }: ForecastBaseViewProps) => {
     const { coordinatesString } = useLocationContext();
 
-    const getDataViewIconProps = (id: DataView, Icon: ComponentType<IconProps>) => {
+    const getDataViewIconProps = (id: ForecastDataView, Icon: ComponentType<IconProps>) => {
         const selected = dataView === id;
         return {
             className: clsx(

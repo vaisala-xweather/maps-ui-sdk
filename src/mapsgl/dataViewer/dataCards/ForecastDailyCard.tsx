@@ -15,6 +15,9 @@ export interface ForecastDailyCardProps {
     params?: Record<string, string>;
 }
 
+/**
+ * @deprecated Use `ForecastCard` with a single daily interval.
+ */
 export const ForecastDailyCard = ({
     className,
     title = 'Daily Forecast',
@@ -29,6 +32,7 @@ export const ForecastDailyCard = ({
             params={{
                 p: coordinatesString,
                 filter: '1day',
+                limit: '7',
                 ...params
             }}>
             <DataViewerCard
