@@ -2,6 +2,8 @@ import { Coordinates } from '@/types/location';
 import { COORDINATE_REGEX, ZIPCODE_REGEX, AIRPORT_CODE_REGEX, BRACKETS_TRIM_REGEX } from '@/constants/regex';
 import { convert as convertGeoCoordinates } from 'geo-coordinates-parser';
 
+// TODO: add options to getCurrentLocation to allow for more control over the geolocation request
+
 /**
  * Validates that latitude and longitude are within valid ranges.
  * @param lat - Latitude value
@@ -67,7 +69,7 @@ export const parseCoordinates = (value: string): Coordinates | null => {
 
     try {
         const parsed = convertGeoCoordinates(input);
-        if (parsed?.decimalLatitude && parsed?.decimalLongitude) {
+        if (parsed?.decimalLatitude != null && parsed?.decimalLongitude != null) {
             const lat = Number(parsed.decimalLatitude);
             const lon = Number(parsed.decimalLongitude);
             if (isValidCoordinateRange(lat, lon)) {
