@@ -1,5 +1,5 @@
-import { format } from 'date-fns';
 import clsx from 'clsx';
+import { formatDate } from '@/utils/date';
 
 import { DateBase, DateBaseProps } from './DateBase';
 
@@ -12,8 +12,8 @@ export const DateNumber = ({
     ...rest
 }: DateNumberProps) => (
     <DateBase {...rest}>
-        {({ date }) => {
-            const dateNumber = format(date, 'd');
+        {({ date, timeZone }) => {
+            const dateNumber = formatDate(date, 'd', timeZone) ?? '';
             return <p className={clsx('xw-text-lg xw-text-slate-700', className)}>{dateNumber}</p>;
         }}
     </DateBase>

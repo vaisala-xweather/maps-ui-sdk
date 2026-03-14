@@ -1,8 +1,10 @@
-import { createContext, useContext, ReactNode } from 'react';
+import { createContext, useContext, useMemo, ReactNode } from 'react';
 import { isValid, parseISO } from 'date-fns';
+import { getTimeZoneFromDateTimeISO } from '@/utils/date';
 
 interface DateContextValue {
   date: Date;
+  timeZone: string | null;
 }
 
 export const DateContext = createContext<DateContextValue | undefined>(undefined);
@@ -25,9 +27,11 @@ export const DateProvider = ({
     children
 }: DateProviderProps) => {
     let date: Date;
+    let timeZone: string | null = null;
 
     if (typeof value === 'string') {
         date = parseISO(value);
+        timeZone = getTimeZoneFromDateTimeISO(value);
     } else if (typeof value === 'number') {
         date = new Date(value);
     } else {
@@ -38,7 +42,7 @@ export const DateProvider = ({
         throw new Error('Invalid date value provided to DateProvider');
     }
 
-    const contextValue = { date };
+    const contextValue = useMemo(() => ({ date, timeZone }), [date.getTime(), timeZone]);
 
     return <DateContext.Provider value={contextValue}>{children}</DateContext.Provider>;
 };
