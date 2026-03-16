@@ -21,7 +21,6 @@ export const TimelineAnimationControl = ({
             )}
             onClick={onAnimationControlClick}
             icon={isPlaying ? PauseIcon : PlayIcon}
-            iconProps={{ className: isPlaying ? '' : 'xw-ml-0.5' }}
         />
     );
 };
