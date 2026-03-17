@@ -36,11 +36,11 @@ export const alertsButton: LayerButtonOptions = {
 export const temperaturesButton: LayerButtonOptions = {
     id: 'temperatures',
     title: 'Temperatures (with boundaries)',
-    selected: false,
+    selected: true,
     value: {
         id: 'temperatures',
         overrides: {
-            beforeIds: ['base.admin_3_4_boundaries.line', 'admin-1-boundary']
+            beforeIds: ['base.admin_2_boundaries.line']
         }
     },
     settingsOptions: [
@@ -50,7 +50,7 @@ export const temperaturesButton: LayerButtonOptions = {
             component: LayerTextControl,
             name: 'temperatures-text',
             label: 'Show Text',
-            value: true,
+            value: false,
             className: 'w-40'
         },
         {
@@ -59,7 +59,7 @@ export const temperaturesButton: LayerButtonOptions = {
         },
         {
             name: sample.colorscale.interval,
-            value: 10,
+            value: 0,
             options: [0, 1, 2, 5, 10],
             optionProps: {
                 units: {

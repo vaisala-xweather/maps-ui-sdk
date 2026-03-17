@@ -1,71 +1,42 @@
-import { useRef, useEffect, useMemo, ComponentType, useCallback, RefObject } from 'react';
+import { useRef, useEffect, useCallback, RefObject, useState } from 'react';
 import {
-    type IconProps,
     type SearchResult,
     Tabs,
-    useTabsContext,
-    HStack,
-    ScrollableArea,
-    Heading,
     Slide,
     MapsGLSearchControl,
     useLocationContext,
-    useDrawerContext,
-    capitalizeWords
+    useDrawerContext
 } from '@xweather/maps-ui-sdk';
 import { useMapContext } from '../providers/MapProvider';
 import { Box } from './Box';
-import { SettingsControl } from './SettingsControl';
 import { TooltipIconButton } from './TooltipIconButton';
-import {
-    SearchIcon,
-    PreferencesOutlineFullIcon
-} from './Icons';
+import { SearchIcon } from './Icons';
 
-interface TabButtonConfig {
-    id: string;
-    label: string;
-    icon: ComponentType<IconProps>;
-}
-
-interface FloatingTabContentProps {
+interface FloatingSearchContentProps {
     buttonsRef: RefObject<HTMLDivElement>;
+    isSearchVisible: boolean;
 }
 
-const TAB_BUTTONS: TabButtonConfig[] = [{
-    id: 'search',
-    label: 'Search',
-    icon: SearchIcon
-}, {
-    id: 'settings',
-    label: 'Settings',
-    icon: PreferencesOutlineFullIcon
-}] as const;
+interface FloatingSearchToggleButtonProps {
+    isActive: boolean;
+    onToggle: () => void;
+}
 
-const FloatingTabButtons = () => {
-    const { currentTab, setCurrentTab } = useTabsContext();
+const FloatingSearchToggleButton = ({ isActive, onToggle }: FloatingSearchToggleButtonProps) => (
+    <Box className="sm:flex-col">
+        <TooltipIconButton
+            icon={SearchIcon}
+            label="Search"
+            onClick={onToggle}
+            isActive={isActive}
+        />
+    </Box>
+);
 
-    const handleTabChange = (newTab: string) => {
-        setCurrentTab(newTab === currentTab ? null : newTab);
-    };
-
-    return (
-        <Box className="sm:flex-col">
-            {TAB_BUTTONS.map(({ id, label, icon }) => (
-                <TooltipIconButton
-                    key={id}
-                    icon={icon}
-                    label={label}
-                    onClick={() => handleTabChange(id)}
-                    isActive={currentTab === id}
-                />
-            ))}
-        </Box>
-    );
-};
-
-const FloatingTabContent = ({ buttonsRef }: FloatingTabContentProps) => {
-    const { currentTab } = useTabsContext();
+const FloatingSearchContent = ({
+    buttonsRef,
+    isSearchVisible
+}: FloatingSearchContentProps) => {
     const { setCoordinates } = useLocationContext();
     const { close } = useDrawerContext();
     const { flyTo } = useMapContext();
@@ -79,35 +50,10 @@ const FloatingTabContent = ({ buttonsRef }: FloatingTabContentProps) => {
     }, [setCoordinates, flyTo, close]);
 
     useEffect(() => {
-        if (currentTab === 'search') {
+        if (isSearchVisible) {
             searchInputRef.current?.focus();
         }
-    }, [currentTab]);
-
-    const tabsContent = useMemo(() => ({
-        search: (
-            <MapsGLSearchControl
-                className="sm:w-90"
-                inputRef={searchInputRef}
-                onSelectResult={handleSearchResult}
-            />
-        ),
-        settings: (
-            <Box
-                className="z-80 h-full pt-5 pb-1 min-w-65 max-w-65"
-                orientation="vertical"
-            >
-                <HStack className="h-7 mx-4 mb-9 items-center">
-                    <Heading level={2}>
-                        {capitalizeWords(currentTab ?? '')}
-                    </Heading>
-                </HStack>
-                <ScrollableArea className="max-h-[70vh]">
-                    <SettingsControl />
-                </ScrollableArea>
-            </Box>
-        )
-    }), [currentTab, handleSearchResult]);
+    }, [isSearchVisible]);
 
     return (
         <Tabs
@@ -118,16 +64,18 @@ const FloatingTabContent = ({ buttonsRef }: FloatingTabContentProps) => {
             offset={12}
         >
             <Tabs.Animation Animator={Slide}>
-                {Object.entries(tabsContent).map(([id, content]) => (
-                    <Tabs.Position key={id}>
-                        <Tabs.AnimatedContent
-                            className={id === 'search' ? 'sm:pt-2 w-full sm:w-fit' : ''}
-                            value={id}
-                        >
-                            {content}
-                        </Tabs.AnimatedContent>
-                    </Tabs.Position>
-                ))}
+                <Tabs.Position>
+                    <Tabs.AnimatedContent
+                        className="sm:pt-2 w-full sm:w-fit"
+                        value="search"
+                    >
+                        <MapsGLSearchControl
+                            className="sm:w-90"
+                            inputRef={searchInputRef}
+                            onSelectResult={handleSearchResult}
+                        />
+                    </Tabs.AnimatedContent>
+                </Tabs.Position>
             </Tabs.Animation>
         </Tabs>
     );
@@ -135,12 +83,22 @@ const FloatingTabContent = ({ buttonsRef }: FloatingTabContentProps) => {
 
 export const FloatingControls = () => {
     const buttonsRef = useRef<HTMLDivElement>(null);
+    const [isSearchVisible, setIsSearchVisible] = useState(true);
+    const handleSearchToggle = useCallback(() => {
+        setIsSearchVisible((previousValue) => !previousValue);
+    }, []);
 
     return (
-        <Tabs.Provider defaultValue="search">
-            <FloatingTabContent buttonsRef={buttonsRef} />
+        <Tabs.Provider value={isSearchVisible ? 'search' : null}>
+            <FloatingSearchContent
+                buttonsRef={buttonsRef}
+                isSearchVisible={isSearchVisible}
+            />
             <div ref={buttonsRef}>
-                <FloatingTabButtons />
+                <FloatingSearchToggleButton
+                    isActive={isSearchVisible}
+                    onToggle={handleSearchToggle}
+                />
             </div>
         </Tabs.Provider>
     );
