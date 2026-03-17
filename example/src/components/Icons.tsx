@@ -30,6 +30,22 @@ export const GeoLocateIcon = (props: IconProps) => (
     </Icon>
 );
 
+export const GlobeIcon = ({ size = 20, ...props }: IconProps) => (
+    <Icon viewBox="0 0 24 24" size={size} {...props}>
+        <g fill="currentColor" clipPath="url(#clip0_1286_2615)">
+            <path fill="none" d="M20.209 9.44794C20.491 9.55783 20.7547 9.67378 21 9.79581C22.26 10.4187 23 11.1796 23 12C23 14.1169 18.075 15.8333 12 15.8333C5.925 15.8333 1 14.1169 1 12C1 11.1796 1.74 10.4187 3 9.79581C3.24533 9.67442 3.509 9.55846 3.791 9.44794" stroke="currentColor" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square"/>
+            <path fill="none" d="M8 8.42827C8.52 8.35735 9.06 8.29985 9.615 8.25673L9.825 8.24139" stroke="currentColor" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square"/>
+            <path fill="none" d="M15.9998 8.42827C15.4798 8.35735 14.9398 8.29985 14.3848 8.25673L14.1748 8.24139" stroke="currentColor" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square"/>
+            <path fill="none" d="M12 22.5416C18.0751 22.5416 23 17.822 23 12C23 6.17798 18.0751 1.45831 12 1.45831C5.92487 1.45831 1 6.17798 1 12C1 17.822 5.92487 22.5416 12 22.5416Z" stroke="currentColor" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square"/>
+        </g>
+        <defs>
+            <clipPath id="clip0_1286_2615">
+                <rect width="24" height="23" fill="white" transform="translate(0 0.5)"/>
+            </clipPath>
+        </defs>
+    </Icon>
+);
+
 export const PreferencesOutlineFullIcon = (props: IconProps) => (
     <Icon {...props} viewBox="0 0 22 22" color="none" strokeColor="currentColor">
         <path d="M12.832 3.66675H21.082" strokeWidth="2" strokeMiterlimit="10" strokeLinecap="square"/>
