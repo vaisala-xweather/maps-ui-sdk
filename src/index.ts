@@ -3,7 +3,7 @@
 /* ══════════════════════════════════════════════════════════════════════════════════════════════════════════════════ */
 
 export { MapsGLTimelineControl } from './mapsgl/MapsGLTimelineControl';
-export type { MapsGLTimelineControlProps, MapsGLTimelineSpeedOption } from './mapsgl/MapsGLTimelineControl';
+export type { MapsGLTimelineControlProps } from './mapsgl/MapsGLTimelineControl';
 export { MapsGLLayerSettingsView } from './mapsgl/MapsGLLayerSettingsView';
 export { MapsGLSearchControl } from './mapsgl/MapsGLSearchControl';
 export type { MapsGLSearchControlProps } from './mapsgl/MapsGLSearchControl';
