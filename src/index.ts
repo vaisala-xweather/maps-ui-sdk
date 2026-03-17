@@ -3,6 +3,7 @@
 /* ══════════════════════════════════════════════════════════════════════════════════════════════════════════════════ */
 
 export { MapsGLTimelineControl } from './mapsgl/MapsGLTimelineControl';
+export type { MapsGLTimelineControlProps, MapsGLTimelineSpeedOption } from './mapsgl/MapsGLTimelineControl';
 export { MapsGLLayerSettingsView } from './mapsgl/MapsGLLayerSettingsView';
 export { MapsGLSearchControl } from './mapsgl/MapsGLSearchControl';
 export type { MapsGLSearchControlProps } from './mapsgl/MapsGLSearchControl';
@@ -25,14 +26,50 @@ export { useMapController } from './mapsgl/useMapController';
 export { useMapEventHandlers } from './mapsgl/useMapEventHandlers';
 
 // prebuilt data viewer views
+/** @deprecated Use `<Forecast.View />` inside `<Forecast.Root>` instead. */
 export { ForecastView } from './mapsgl/dataViewer/dataViews/forecast/ForecastView';
+/** @deprecated Use `Forecast.View` inside `Forecast.Root` with a single daily interval. */
 export { ForecastDailyView } from './mapsgl/dataViewer/dataViews/forecast/ForecastDailyView';
+/** @deprecated Use `Forecast.View` inside `Forecast.Root` with a single hourly interval. */
 export { ForecastHourlyView } from './mapsgl/dataViewer/dataViews/forecast/ForecastHourlyView';
 export { AlertsView } from './mapsgl/dataViewer/dataViews/AlertsView';
 export { PlacesView } from './mapsgl/dataViewer/dataViews/PlacesView';
 export { ThreatsView } from './mapsgl/dataViewer/dataViews/ThreatsView';
 export { ImpactsView } from './mapsgl/dataViewer/dataViews/impacts/ImpactsView';
 export { OutlookView } from './mapsgl/dataViewer/dataViews/OutlookView';
+/* ══════════════════════════════════════════════════════════════════════════════════════════════════════════════════ */
+// Compound Component
+export { Forecast, type ForecastProps } from './mapsgl/dataViewer/dataViews/forecast';
+
+// Context
+export {
+    ForecastContext,
+    useForecastContext,
+    useForecastIntervals,
+    useForecastMetrics,
+    useForecastActivePeriods,
+    type ForecastContextValue
+} from './mapsgl/dataViewer/dataViews/forecast';
+
+// Sub-components
+export { ForecastRoot, type ForecastRootProps } from './mapsgl/dataViewer/dataViews/forecast';
+export { ForecastProvider, type ForecastProviderProps } from './mapsgl/dataViewer/dataViews/forecast';
+export { ForecastIntervalSelector, type ForecastIntervalSelectorProps } from './mapsgl/dataViewer/dataViews/forecast';
+export { ForecastMetricSelector, type ForecastMetricSelectorProps } from './mapsgl/dataViewer/dataViews/forecast';
+export { ForecastOutlook, type ForecastOutlookProps } from './mapsgl/dataViewer/dataViews/forecast';
+export { ForecastTable, type ForecastTableProps } from './mapsgl/dataViewer/dataViews/forecast';
+export type {
+    ForecastDataView,
+    ForecastIntervalConfig,
+    ForecastMetricConfig,
+    ForecastNormalizedData,
+    ForecastParamsByEndpoint,
+    ForecastPeriod,
+    ForecastRowSlots,
+    ForecastRowRenderProps,
+    ForecastValueRenderProps
+} from './mapsgl/dataViewer/dataViews/forecast';
+export { FORECAST_INTERVAL_PRESETS } from './mapsgl/dataViewer/dataViews/forecast';
 /* ══════════════════════════════════════════════════════════════════════════════════════════════════════════════════ */
 // Compound Component
 export { Conditions, type ConditionsProps } from './mapsgl/dataViewer/dataViews/conditions';
@@ -52,17 +89,29 @@ export { ConditionsTable, type ConditionsTableProps } from './mapsgl/dataViewer/
 
 // prebuilt data viewer cards
 export { ForecastCard } from './mapsgl/dataViewer/dataCards/ForecastCard';
+/**
+ * @deprecated Use `ForecastCard` with a single daily interval and
+ * `intervals={[{ id: '1day', label: 'Daily', filter: '1day', strategy: 'daily', params: { limit: '7' }, todayDataScope: 'start-of-day' }]}`.
+ */
 export { ForecastDailyCard } from './mapsgl/dataViewer/dataCards/ForecastDailyCard';
+/**
+ * @deprecated Use `ForecastCard` with a single hourly interval,
+ * `intervals={[{ id: '3hr', label: '3 Hour', filter: '3hr', strategy: 'hourly', params: { limit: '7' }, includeSunMoon: true }]}`,
+ * and `includeOutlook={false}`.
+ */
 export { ForecastHourlyCard } from './mapsgl/dataViewer/dataCards/ForecastHourlyCard';
 export { AlertsCard } from './mapsgl/dataViewer/dataCards/AlertsCard';
 export { ThreatsCard } from './mapsgl/dataViewer/dataCards/ThreatsCard';
 export { ImpactsCard } from './mapsgl/dataViewer/dataCards/ImpactsCard';
 export { ConditionsCard } from './mapsgl/dataViewer/dataCards/ConditionsCard';
 
-// forecast
+// forecast (legacy direct exports)
 export { ForecastBaseTable } from './mapsgl/dataViewer/dataViews/forecast/ForecastBaseTable';
+/** @deprecated Use `<Forecast.View />` inside `<Forecast.Root>` instead. */
 export { ForecastBaseView } from './mapsgl/dataViewer/dataViews/forecast/ForecastBaseView';
+/** @deprecated Use `<Forecast.Table intervalId="1day" />` instead. */
 export { ForecastDailyTable } from './mapsgl/dataViewer/dataViews/forecast/ForecastDailyTable';
+/** @deprecated Use `<Forecast.Table intervalId="3hr" />` instead. */
 export { ForecastHourlyTable } from './mapsgl/dataViewer/dataViews/forecast/ForecastHourlyTable';
 
 // custom layer styles
@@ -139,6 +188,7 @@ export { Positioner } from './components/primitives/layout/Positioner';
 // display
 export { DateDisplay } from './components/primitives/display/dateDisplay';
 export { DateBase } from './components/primitives/display/dateDisplay/DateBase';
+export type { DateRenderProps, DateBaseProps } from './components/primitives/display/dateDisplay/DateBase';
 export { DateNumber } from './components/primitives/display/dateDisplay/DateNumber';
 export { DayShort } from './components/primitives/display/dateDisplay/DayShort';
 export { Time } from './components/primitives/display/dateDisplay/Time';
@@ -232,6 +282,7 @@ export { ColorRangeProvider, type ColorRangeProviderProps } from './components/c
 // Sub-components
 export {
     ColorRangeRoot, type ColorRangeRootProps,
+    ColorRangeEndpointProvider, type ColorRangeEndpointProviderProps,
     ColorRangeOffset, type ColorRangeOffsetProps,
     ColorRangeBar, type ColorRangeBarProps,
     ColorRangeGradient, type ColorRangeGradientProps,
@@ -448,7 +499,7 @@ export { settingsStateReducer } from './reducers/settingsStateReducer';
 // Utils
 /* ══════════════════════════════════════════════════════════════════════════════════════════════════════════════════ */
 
-export { convert, formatUnitText, getMapsGLUnitSymbol } from './utils/units';
+export { convert, formatUnitText, getUnitText, getMapsGLUnitSymbol } from './utils/units';
 export {
     resolveUnitToKey,
     resolveUnitToSymbol,
