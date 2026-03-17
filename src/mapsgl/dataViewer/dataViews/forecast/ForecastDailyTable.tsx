@@ -13,6 +13,9 @@ import { DateDisplay } from '@/components/primitives/display/dateDisplay';
 import { ColorRange, ColorRangeRootProps } from '@/components/compositions/colorRange';
 import { ForecastBaseTable } from './ForecastBaseTable';
 
+/**
+ * @deprecated Use `<Forecast.Table intervalId="1day" />` instead.
+ */
 export const ForecastDailyTable = ({ dataView }: ForecastViewProps) => {
     const data = useDataContext();
     const { units } = useSettingsContext();
@@ -96,12 +99,10 @@ export const ForecastDailyTable = ({ dataView }: ForecastViewProps) => {
                                 />
                                 : <ColorRange.Offset>
                                     <ColorRange.Gradient
-                                        minSlot={ <>
-                                            <ColorRange.Label/>
+                                        minSlot={<>
+                                            <ColorRange.Label />
                                             <ColorRange.Circle size={[16, 10]} />
-                                        </>
-
-                                        }
+                                        </>}
                                         maxSlot={
                                             <>
                                                 <ColorRange.Circle size={[16, 10]} />
@@ -113,8 +114,7 @@ export const ForecastDailyTable = ({ dataView }: ForecastViewProps) => {
                         }
                     </ColorRange>
                 );
-            }
-            }>
-        </ForecastBaseTable>
+            }}
+        />
     );
 };

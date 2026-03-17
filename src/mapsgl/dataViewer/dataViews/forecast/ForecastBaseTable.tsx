@@ -1,6 +1,6 @@
 import { ComponentType, ReactNode } from 'react';
 import { DATA_VIEW_CONFIG } from '@/constants/forecast';
-import { DataView, ForecastPeriod } from '@/types/forecast';
+import { ForecastDataView, ForecastPeriod } from '@/types/forecast';
 import { useSettingsContext } from '@/providers/SettingsProvider';
 import { capitalizeWords } from '@/utils/text';
 import { PanelList } from '@/components/primitives/layout/panel/PanelList';
@@ -11,7 +11,7 @@ import { Hr } from '@/components/primitives/layout/Hr';
 
 interface ForecastBaseTableProps {
     periods: ForecastPeriod[];
-    dataView: DataView;
+    dataView: ForecastDataView;
     colorRange: (period: ForecastPeriod, index: number) => ReactNode;
     dateDisplay: ComponentType<Omit<DateBaseProps, 'children'>>;
 }
@@ -22,7 +22,7 @@ interface SunriseSunsetBarProps {
 }
 
 interface ForecastUnitDescriptionBannerProps {
-    dataView: DataView;
+    dataView: ForecastDataView;
 }
 
 const PercentageText = ({ percent }: {percent: number | string | undefined}) => (

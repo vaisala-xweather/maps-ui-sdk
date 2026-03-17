@@ -15,6 +15,9 @@ export interface ForecastHourlyCardProps {
     params?: Record<string, string>;
 }
 
+/**
+ * @deprecated Use `ForecastCard` with a single hourly interval and `includeOutlook={false}`.
+ */
 export const ForecastHourlyCard = ({
     title = 'Hourly Forecast',
     children = <ForecastHourlyView />,
@@ -30,6 +33,7 @@ export const ForecastHourlyCard = ({
                 params: {
                     filter: '3hr',
                     p: coordinatesString,
+                    limit: '7',
                     ...params
                 }
             }, {

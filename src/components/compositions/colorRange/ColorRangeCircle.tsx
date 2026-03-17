@@ -1,21 +1,33 @@
-import { useColorRangeContext } from '@/providers/ColorRangeProvider';
+import { useContext } from 'react';
+import { ColorRangeContext } from '@/providers/ColorRangeProvider';
 import { Circle } from '@/components/primitives/display/Circle';
 import { getHexCodeFromColorScale } from '@/utils/color';
-import { useColorRangeEndpointContext } from './ColorRangeEndpointProvider';
+import { ColorRangeEndpointContext, ColorRangeEndpointValue } from './ColorRangeEndpointProvider';
+
+// TODO: we need to make it so that the type can be passed directly instead of forcing the endpoint provider when you just want the circle
+// current setup doesn't work as it requires the INTERNAL endpoint provider, cant even add your own
 
 export interface ColorRangeCircleProps {
     size?: number | number[];
     color?: string;
+    type?: Exclude<ColorRangeEndpointValue, null>;
 }
 
-export const ColorRangeCircle = ({ size = [16, 10], color }: ColorRangeCircleProps) => {
-    const { colorScale, colorScaleUnitConverter, min, max } = useColorRangeContext();
-    const type = useColorRangeEndpointContext();
+export const ColorRangeCircle = ({ size = [16, 10], color, type }: ColorRangeCircleProps) => {
+    const colorRangeContext = useContext(ColorRangeContext);
+    const endpointType = useContext(ColorRangeEndpointContext);
+    const resolvedType = type ?? endpointType ?? 'max';
 
     const sizes = Array.isArray(size) ? size : [size, size];
     const [outerCircleDiameter, innerCircleDiameter] = sizes;
-    const value = type === 'min' ? min : max;
-    const colorFromColorScale = getHexCodeFromColorScale(value, colorScale, colorScaleUnitConverter);
+    const valueFromColorRangeContext = resolvedType === 'min' ? colorRangeContext?.min : colorRangeContext?.max;
+    const colorFromColorScale = colorRangeContext
+        ? getHexCodeFromColorScale(
+            valueFromColorRangeContext,
+            colorRangeContext.colorScale,
+            colorRangeContext.colorScaleUnitConverter
+        )
+        : undefined;
 
     return (
         <Circle

@@ -9,6 +9,7 @@ const { temperature, distance, speed, pressure, rate } = UNITS;
 
 const settings: InitialSettings = {
     baseMap: 'dark',
+    mapProjection: 'globe',
     units: {
         temperature: temperature.degF,
         distance: distance.mi,

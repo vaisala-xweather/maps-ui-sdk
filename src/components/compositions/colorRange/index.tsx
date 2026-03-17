@@ -5,6 +5,7 @@ import { ColorRangeBar } from './ColorRangeBar';
 import { ColorRangeGradient } from './ColorRangeGradient';
 import { ColorRangeCircle } from './ColorRangeCircle';
 import { ColorRangeLabel } from './ColorRangeLabel';
+import { ColorRangeEndpointProvider } from './ColorRangeEndpointProvider';
 
 type ColorRangeRootProps = ColorRangeProviderProps;
 
@@ -29,6 +30,7 @@ const ColorRange = ({ children, ...rest }: ColorRangeProps) => (
 ColorRange.displayName = 'ColorRange';
 
 ColorRange.Root = ColorRangeRoot;
+ColorRange.EndpointProvider = ColorRangeEndpointProvider;
 ColorRange.Offset = ColorRangeOffset;
 ColorRange.Bar = ColorRangeBar;
 ColorRange.Gradient = ColorRangeGradient;
@@ -44,6 +46,7 @@ export { ColorRangeProvider, type ColorRangeProviderProps } from '@/providers/Co
 
 // Sub-components
 export { ColorRangeRoot, type ColorRangeRootProps };
+export { ColorRangeEndpointProvider, type ColorRangeEndpointProviderProps } from './ColorRangeEndpointProvider';
 export { ColorRangeOffset, type ColorRangeOffsetProps } from './ColorRangeOffset';
 export { ColorRangeBar, type ColorRangeBarProps } from './ColorRangeBar';
 export { ColorRangeGradient, type ColorRangeGradientProps } from './ColorRangeGradient';

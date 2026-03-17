@@ -1,5 +1,5 @@
-import { format, isToday } from 'date-fns';
 import clsx from 'clsx';
+import { formatDate, isDateToday } from '@/utils/date';
 
 import { DateBase, DateBaseProps } from './DateBase';
 
@@ -12,8 +12,10 @@ export const DayShort = ({
     ...rest
 }: DayShortProps) => (
     <DateBase {...rest}>
-        {({ date }) => {
-            const dayDisplay = isToday(date) ? 'Today' : format(date, 'EEE');
+        {({ date, timeZone }) => {
+            const dayDisplay = isDateToday(date, timeZone)
+                ? 'Today'
+                : (formatDate(date, 'EEE', timeZone) ?? '');
             return <p className={clsx('xw-text-slate-500', className)}>{dayDisplay}</p>;
         }}
     </DateBase>

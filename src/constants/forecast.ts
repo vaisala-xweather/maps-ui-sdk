@@ -1,4 +1,9 @@
-import { DataViewConfigItem } from '@/types/forecast';
+import {
+    ForecastDataView,
+    ForecastDataViewConfigItem,
+    ForecastIntervalConfig,
+    ForecastMetricConfig
+} from '@/types/forecast';
 import { UNITS, MEASUREMENT_TYPE } from '@/constants/units';
 import {
     TEMPERATURE_COLOR_SCALE,
@@ -7,7 +12,7 @@ import {
     SNOW_DEPTH_COLOR_SCALE
 } from './colors';
 
-export const DATA_VIEW_CONFIG: { [key: string]: DataViewConfigItem } = {
+export const DATA_VIEW_CONFIG: Record<ForecastDataView, ForecastDataViewConfigItem> = {
     temperature: {
         id: 'temperature',
         measurementType: MEASUREMENT_TYPE.temperature,
@@ -49,3 +54,56 @@ export const DATA_VIEW_CONFIG: { [key: string]: DataViewConfigItem } = {
         colorScale: SNOW_DEPTH_COLOR_SCALE
     }
 };
+
+export const FORECAST_INTERVAL_PRESETS = {
+    oneHour: {
+        id: '1hr',
+        label: 'Hourly',
+        filter: '1hr',
+        params: { limit: '24' },
+        strategy: 'hourly',
+        dateDisplay: 'time',
+        valueMode: 'single',
+        includeSunMoon: true
+    },
+    threeHour: {
+        id: '3hr',
+        label: '3 Hour',
+        filter: '3hr',
+        params: { limit: '8' },
+        strategy: 'hourly',
+        dateDisplay: 'time',
+        valueMode: 'single',
+        includeSunMoon: true
+    },
+    oneDay: {
+        id: '1day',
+        label: 'Daily',
+        filter: '1day',
+        params: { limit: '7' },
+        strategy: 'daily',
+        dateDisplay: 'date',
+        valueMode: 'range',
+        includeSunMoon: false,
+        todayDataScope: 'start-of-day'
+    }
+} as const satisfies Record<string, ForecastIntervalConfig>;
+
+export const DEFAULT_FORECAST_INTERVALS: ForecastIntervalConfig[] = [
+    FORECAST_INTERVAL_PRESETS.oneDay,
+    FORECAST_INTERVAL_PRESETS.threeHour
+];
+
+export const DEFAULT_FORECAST_METRICS: ForecastMetricConfig[] = [{
+    id: DATA_VIEW_CONFIG.temperature.id,
+    label: 'Temperature'
+}, {
+    id: DATA_VIEW_CONFIG.wind.id,
+    label: 'Wind'
+}, {
+    id: DATA_VIEW_CONFIG.precipitation.id,
+    label: 'Precipitation'
+}, {
+    id: DATA_VIEW_CONFIG.snowfall.id,
+    label: 'Snowfall'
+}];

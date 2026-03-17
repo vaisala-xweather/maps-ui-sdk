@@ -52,7 +52,10 @@ export const Drawer = ({
     return (
         <motion.div
             id="Drawer"
-            className={clsx('absolute min-w-65 max-w-65 h-full text-white top-0 bottom-0 bg-black z-70', className)}
+            className={clsx(
+                'xw-absolute xw-min-w-65 xw-max-w-65 xw-h-full xw-text-white xw-top-0 xw-bottom-0 xw-bg-black xw-z-70',
+                className
+            )}
             initial="closed"
             animate={isOpen ? 'open' : 'closed'}
             variants={variants}

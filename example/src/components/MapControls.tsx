@@ -1,6 +1,13 @@
 import { ComponentType } from 'react';
 import { type IconProps, useMapsGLMapControllerContext } from '@xweather/maps-ui-sdk';
-import { AddIcon, SubtractIcon, LegendIcon, TargetIcon, GeoLocateIcon } from './Icons';
+import {
+    AddIcon,
+    SubtractIcon,
+    LegendIcon,
+    TargetIcon,
+    GeoLocateIcon,
+    GlobeIcon
+} from './Icons';
 import { Box } from './Box';
 import { useMapContext } from '../providers/MapProvider';
 import { TooltipIconButton } from './TooltipIconButton';
@@ -14,7 +21,7 @@ interface MapControlConfig {
 }
 
 export const MapControls = () => {
-    const { geoLocate } = useMapContext();
+    const { currentProjection, geoLocate, toggleProjection } = useMapContext();
     const {
         controller,
         isLegendVisible,
@@ -45,6 +52,12 @@ export const MapControls = () => {
         tooltip: 'Toggle Data Inspector',
         isActive: isDataInspectorVisible,
         onClick: () => toggleDataInspector('move', true)
+    }, {
+        id: 'projection',
+        icon: GlobeIcon,
+        tooltip: currentProjection === 'globe' ? 'Switch to Mercator' : 'Switch to Globe',
+        isActive: currentProjection === 'globe',
+        onClick: toggleProjection
     }, {
         id: 'geolocate',
         icon: GeoLocateIcon,

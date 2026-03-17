@@ -19,10 +19,13 @@ import { DateDisplay } from '@/components/primitives/display/dateDisplay';
 import { ColorRange } from '@/components/compositions/colorRange';
 import { ForecastBaseTable } from './ForecastBaseTable';
 
+/**
+ * @deprecated Use `<Forecast.Table intervalId="3hr" />` instead.
+ */
 export const ForecastHourlyTable = ({ dataView }: ForecastViewProps) => {
     const data = useDataContext();
     const { units } = useSettingsContext();
-    const [forecastData, sunMoonData] = data?.map((x: {response: DataResponse}) => x.response) ?? [];
+    const [forecastData, sunMoonData] = data?.map((x: { response: DataResponse }) => x.response) ?? [];
     const hourlyForecastPeriods = get(forecastData, '0.periods');
 
     if (isNil(hourlyForecastPeriods)) {
@@ -68,22 +71,20 @@ export const ForecastHourlyTable = ({ dataView }: ForecastViewProps) => {
                         <ColorRange.Bar maxSlot={
                             <>
                                 <ColorRange.Circle size={[24, 16]} />
-                                {
-                                    <ColorRange.Label>{
-                                        isWindView(dataView) && expected === 0
-                                            ? 'Calm'
-                                            : (((isPrecipitationOrSnowfall(measurementType))
-                                                && expected === 0)
-                                                ? ''
-                                                : expected)
-                                    }</ColorRange.Label>
+                                <ColorRange.Label>{
+                                    isWindView(dataView) && expected === 0
+                                        ? 'Calm'
+                                        : (((isPrecipitationOrSnowfall(measurementType))
+                                            && expected === 0)
+                                            ? ''
+                                            : expected)
                                 }
+                                </ColorRange.Label>
                             </>
-                        }/>
+                        } />
                     </ColorRange>
                 );
             }}
-
         />
     );
 };

@@ -28,7 +28,7 @@ export const layersConfig: LayersConfig = [{
             value: 'Default'
         }, {
             name: sample.colorscale.interval,
-            value: 10,
+            value: 0,
             optionProps: {
                 units: {
                     measurementType: MEASUREMENT_TYPE.rate,

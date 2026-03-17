@@ -11,8 +11,8 @@ export const Time = ({
     ...rest
 }: TimeProps) => (
     <DateBase {...rest}>
-        {({ date }) => {
-            const timeDisplay = formatDate(date, 'h a')?.toLowerCase();
+        {({ date, timeZone }) => {
+            const timeDisplay = formatDate(date, 'h a', timeZone)?.toLowerCase();
             return <p className={clsx('xw-text-base xw-text-slate-700', className)}>{timeDisplay}</p>;
         }}
     </DateBase>

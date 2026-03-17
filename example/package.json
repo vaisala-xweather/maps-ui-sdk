@@ -6,11 +6,12 @@
     "scripts": {
         "dev": "vite",
         "build": "tsc && vite build",
+        "build:deploy": "tsc && env VITE_BASE_PATH=/sdks/maps-ui-sdk/ vite build",
         "preview": "vite preview"
     },
     "dependencies": {
-        "@xweather/maps-ui-sdk": "^1.0.8",
-        "@xweather/mapsgl": "^1.8.0",
+        "@xweather/maps-ui-sdk": "^1.0.9",
+        "@xweather/mapsgl": "^1.8.5",
         "mapbox-gl": "^3.2.0",
         "react": "^18.3.1",
         "react-dom": "^18.2.0"
