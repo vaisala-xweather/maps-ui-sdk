@@ -8,19 +8,19 @@
 
 ## MapsGL components
 
-**[MapsGLMapControllerProvider](https://www.xweather.com/docs/maps-ui-sdk/reference/mapsgl/map-controller-provider)**  
+**[MapsGLMapControllerProvider](https://www.xweather.com/docs/maps-ui-sdk/mapsgl/map-controller-provider)**  
 Core provider that integrates with the MapsGL Map Controller, providing access to map controller instances throughout your application.
 
-**[MapsGLLayersProvider](https://www.xweather.com/docs/maps-ui-sdk/reference/mapsgl/layers-provider)**  
+**[MapsGLLayersProvider](https://www.xweather.com/docs/maps-ui-sdk/mapsgl/layers-provider)**  
 State management solution for MapsGL weather layers, handling layer lifecycle, styling, and state synchronization.
 
-**[MapsGLLayersControl](https://www.xweather.com/docs/maps-ui-sdk/reference/mapsgl/layers-control)**  
+**[MapsGLLayersControl](https://www.xweather.com/docs/maps-ui-sdk/mapsgl/layers-control)**  
 Interface for managing map layer visibility and styling, supporting both individual and grouped layer controls.
 
-**[MapsGLTimelineControl](https://www.xweather.com/docs/maps-ui-sdk/reference/mapsgl/timeline-control)**     
+**[MapsGLTimelineControl](https://www.xweather.com/docs/maps-ui-sdk/mapsgl/timeline-control)**     
 Specialized timeline interface for time-based map animations, offering navigation, dynamic tick marks, and settings panel for customizing animation speed and time ranges.
 
-**[MapsGLSearchControl](https://www.xweather.com/docs/maps-ui-sdk/reference/mapsgl/search-control)**  
+**[MapsGLSearchControl](https://www.xweather.com/docs/maps-ui-sdk/mapsgl/search-control)**  
 Pre-configured search interface designed for MapsGL integration, with built-in result grouping and location history.
 
 Visit our [documentation](https://www.xweather.com/docs/maps-ui-sdk) for more information and a complete list of components with usage examples.
