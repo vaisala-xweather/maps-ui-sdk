@@ -5,7 +5,7 @@ import {
     type WeatherLayerConfiguration,
     type AnyMapController,
     type LayerType,
-    type ExpressionSpecification
+    type FilterExpression
 } from '@xweather/mapsgl';
 import {
     type LayerButtonOptionSetting,
@@ -690,7 +690,7 @@ const childIdsFromLayerConfig = (
 export const applyFilterToCompositeChildren = (
     data: Readonly<Partial<WeatherLayerOptions>>,
     childIds: readonly string[],
-    parentFilter: ExpressionSpecification
+    parentFilter: FilterExpression
 ): Partial<WeatherLayerOptions> => {
     const existingChildLayers = data.childLayers ?? {};
     let hasChanges = false;
