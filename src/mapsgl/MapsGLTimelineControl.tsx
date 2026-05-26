@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef, MutableRefObject, ReactNode, RefObject } from 'react';
+import { useState, useEffect, useRef, ReactNode, RefObject } from 'react';
 import clsx from 'clsx';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'motion/react';
 import { TimelineSettingsConfig } from '@/types/timeline';
 import { ExpandCollapseProvider, ExpandCollapseContext } from '@/providers/ExpandCollapseProvider';
 import { Timeline, TimelineContext } from '@/components/compositions/timeline';

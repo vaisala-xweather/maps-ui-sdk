@@ -1,5 +1,5 @@
 import { useEffect, useRef, MouseEvent, useState, useCallback } from 'react';
-import { motion, useAnimation, HTMLMotionProps } from 'framer-motion';
+import { motion, useAnimation, HTMLMotionProps } from 'motion/react';
 import clsx from 'clsx';
 import { useTimelineContext } from '@/providers/TimelineProvider';
 

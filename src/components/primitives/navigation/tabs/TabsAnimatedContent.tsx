@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'motion/react';
 import { POSITION } from '@/constants/position';
 import { Fade } from '@/components/primitives/animation/Fade';
 import { useTabContent } from './useTabContent';

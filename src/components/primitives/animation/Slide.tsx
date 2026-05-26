@@ -1,5 +1,5 @@
 import { forwardRef } from 'react';
-import { motion, HTMLMotionProps } from 'framer-motion';
+import { motion, HTMLMotionProps } from 'motion/react';
 import { usePositionContext } from '@/providers/PositionProvider';
 import { Side } from '@/types/position';
 import { SIDE } from '@/constants/position';

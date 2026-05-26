@@ -1,4 +1,4 @@
-export const DYNAMIC_EASE = [0.83, 0, 0.17, 1];
+export const DYNAMIC_EASE = [0.83, 0, 0.17, 1] as const;
 
 export const EXPAND_COLLAPSE_ANIMATION_STATES = {
     expanded: 'expanded',

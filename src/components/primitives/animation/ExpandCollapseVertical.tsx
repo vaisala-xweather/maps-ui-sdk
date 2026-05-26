@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
+import type { Easing } from 'motion-utils';
 import { DYNAMIC_EASE } from '@/constants/animation';
 
 export interface ExpandCollapseVerticalProps {
@@ -7,7 +8,7 @@ export interface ExpandCollapseVerticalProps {
     expanded: boolean | null,
     className?: string,
     duration?: number,
-    ease?: string | number[]
+    ease?: Easing
 }
 
 export const ExpandCollapseVertical = ({
