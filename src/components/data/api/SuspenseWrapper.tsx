@@ -1,5 +1,5 @@
 import { Suspense, ReactNode, ReactElement } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { DYNAMIC_EASE } from '@/constants/animation';
 
 export interface SuspenseWrapperProps {

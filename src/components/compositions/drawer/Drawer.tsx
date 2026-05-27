@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import { ReactNode, ReactElement, useEffect } from 'react';
 import clsx from 'clsx';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { useAnchorContext } from '@/providers/AnchorProvider';
 import { ANCHOR } from '@/constants/anchor';
 import { ModalContextType, useModalContext } from '@/components/primitives/overlays/modal/ModalProvider';

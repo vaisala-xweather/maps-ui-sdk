@@ -54,6 +54,9 @@ const config: Config = {
             }
         }
     },
+    corePlugins: {
+        preflight: false,
+    },
     plugins: [],
 } satisfies Config
 

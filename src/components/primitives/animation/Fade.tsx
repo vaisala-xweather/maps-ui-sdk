@@ -1,11 +1,12 @@
 import { forwardRef } from 'react';
-import { motion, AnimatePresence, HTMLMotionProps } from 'framer-motion';
+import { motion, AnimatePresence, HTMLMotionProps } from 'motion/react';
+import type { Easing } from 'motion-utils';
 import { DYNAMIC_EASE } from '@/constants/animation';
 
 export interface FadeProps extends HTMLMotionProps<'div'> {
     duration?: number;
     delay?: number;
-    ease?: number[];
+    ease?: Easing;
 }
 
 const variants = {

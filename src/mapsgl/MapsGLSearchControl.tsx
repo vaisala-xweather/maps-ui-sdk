@@ -1,5 +1,5 @@
 import { Fragment } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'motion/react';
 import { Search, type SearchProps } from '@/components/compositions/search/index';
 import { SearchResult, SearchGroupType } from '@/types/search';
 import { Fade } from '@/components/primitives/animation/Fade';

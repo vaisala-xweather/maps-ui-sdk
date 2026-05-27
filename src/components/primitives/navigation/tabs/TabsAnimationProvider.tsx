@@ -1,5 +1,5 @@
 import { createContext, useContext, ReactNode, ComponentType } from 'react';
-import { HTMLMotionProps } from 'framer-motion';
+import { HTMLMotionProps } from 'motion/react';
 import { Fade } from '@/components/primitives/animation/Fade';
 
 export type AnimatorComponent = ComponentType<HTMLMotionProps<'div'> & { [key: string]: any }>;

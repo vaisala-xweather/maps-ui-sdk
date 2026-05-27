@@ -4,9 +4,6 @@ import { Circle } from '@/components/primitives/display/Circle';
 import { getHexCodeFromColorScale } from '@/utils/color';
 import { ColorRangeEndpointContext, ColorRangeEndpointValue } from './ColorRangeEndpointProvider';
 
-// TODO: we need to make it so that the type can be passed directly instead of forcing the endpoint provider when you just want the circle
-// current setup doesn't work as it requires the INTERNAL endpoint provider, cant even add your own
-
 export interface ColorRangeCircleProps {
     size?: number | number[];
     color?: string;

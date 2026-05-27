@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { HTMLMotionProps } from 'framer-motion';
+import { HTMLMotionProps } from 'motion/react';
 import { TabsAnimationProvider, AnimatorComponent } from './TabsAnimationProvider';
 
 export interface TabsAnimationProps extends HTMLMotionProps<'div'> {

@@ -1,5 +1,5 @@
 import { ReactNode, CSSProperties } from 'react';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { pixels } from '@/utils/css';
 import { useExpandCollapseContext } from '@/providers/ExpandCollapseProvider';
 import { DYNAMIC_EASE, EXPAND_COLLAPSE_ANIMATION_STATES } from '@/constants/animation';
