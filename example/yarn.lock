@@ -1081,10 +1081,10 @@
     "@types/babel__core" "^7.20.5"
     react-refresh "^0.17.0"
 
-"@xweather/maps-ui-sdk@^1.0.10":
-  version "1.0.10"
-  resolved "https://registry.yarnpkg.com/@xweather/maps-ui-sdk/-/maps-ui-sdk-1.0.10.tgz#fd42c3cca104be4cd788f62d26349d393a734299"
-  integrity sha512-9S8omkwC7Ghjrn7B9zRAR36+VObv0JckwWi2yfTDDRiY9l6L9CLgvOHawo+tqf2azyzdUDdpKyLIDYiqpCyFvQ==
+"@xweather/maps-ui-sdk@^1.0.11":
+  version "1.0.11"
+  resolved "https://registry.yarnpkg.com/@xweather/maps-ui-sdk/-/maps-ui-sdk-1.0.11.tgz#fa155e64e26491402877954be474b9a60d0e9fec"
+  integrity sha512-sqvyaTvMBG8MWMmN0fD9OBQRb1Jb4Hdx4LpslNj9VFe4s2Rpzfj/iz5KYj789Q9nX/dyaA++TB2BlguGsDVhyA==
   dependencies:
     "@aerisweather/javascript-utils" "^0.5.9"
     "@radix-ui/react-select" "^2.1.6"

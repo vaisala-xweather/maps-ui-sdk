@@ -1,6 +1,7 @@
 import { ReactNode, createContext, useContext, useState, useRef, useEffect, useCallback } from 'react';
 import { addDays, subDays } from 'date-fns';
 import { SliderTimes } from '@/types/timeline';
+import { computeNowProportion } from '@/utils/timeline';
 
 interface Dimensions {
     trackWidth: number | null;
@@ -53,6 +54,8 @@ export interface TimelineContextProps {
     onDrag: (x: number) => void;
     onPositionChange: (x: number) => void;
     onNowPositionUpdate: () => void;
+    /** Moves the playhead to the current time. No-op when the current time is outside the active range. */
+    goToNow?: () => void;
 }
 
 const defaultStartDate = subDays(new Date(), 1);
@@ -83,7 +86,8 @@ export const TimelineContext = createContext<TimelineContextProps>({
     onPause: () => {},
     onDrag: () => {},
     onPositionChange: () => {},
-    onNowPositionUpdate: () => {}
+    onNowPositionUpdate: () => {},
+    goToNow: () => {}
 });
 
 export const useTimelineContext = () => {
@@ -120,16 +124,13 @@ export const TimelineProvider = ({
 
     const handleNowPositionUpdate = useCallback(() => {
         if (!dimensions.trackWidth) return;
-
-        const nowDate = new Date();
-        const timePassedInMilliseconds = nowDate.getTime() - sliderTimes.current.fromTimeInMilliseconds;
-        const proportionTimePassedInMilliseconds = timePassedInMilliseconds / sliderTimes.current.rangeInMilliseconds;
-        const calculatedPosition = Math.round(dimensions.trackWidth * proportionTimePassedInMilliseconds);
-
+        const proportion = computeNowProportion(startDate, endDate);
+        if (proportion === undefined) return;
+        const calculatedPosition = Math.round(dimensions.trackWidth * proportion);
         onNowPositionUpdate(
             calculatedPosition >= 0 && calculatedPosition <= dimensions.trackWidth ? calculatedPosition : undefined
         );
-    }, [dimensions.trackWidth]);
+    }, [dimensions.trackWidth, startDate, endDate]);
 
     useEffect(() => {
         handleNowPositionUpdate();
@@ -180,8 +181,9 @@ export const TimelineProvider = ({
         if (dimensions.trackWidth) {
             const normalizedPosition = x / dimensions.trackWidth;
 
-            if (onTimeChange) {
-                const { fromTimeInMilliseconds, rangeInMilliseconds } = sliderTimes.current;
+            if (onTimeChange && startDate && endDate) {
+                const fromTimeInMilliseconds = startDate.getTime();
+                const rangeInMilliseconds = endDate.getTime() - fromTimeInMilliseconds;
                 const timeDeltaInMilliseconds = rangeInMilliseconds * normalizedPosition;
                 const newTime = new Date(fromTimeInMilliseconds + timeDeltaInMilliseconds);
                 onTimeChange(newTime);
@@ -194,6 +196,13 @@ export const TimelineProvider = ({
 
     const onDrag = (x: number) => {
         handleTimeIndicatorMovement(x);
+    };
+
+    const goToNow = () => {
+        if (!dimensions.trackWidth) return;
+        const proportion = computeNowProportion(startDate, endDate);
+        if (proportion === undefined || proportion < 0 || proportion > 1) return;
+        handleTimeIndicatorMovement(proportion * dimensions.trackWidth);
     };
 
     const setSliderTimes = (updatedSliderTimes: SliderTimes) => {
@@ -219,7 +228,8 @@ export const TimelineProvider = ({
                 isResizing,
                 setIsResizing,
                 nowPosition,
-                onNowPositionUpdate: handleNowPositionUpdate
+                onNowPositionUpdate: handleNowPositionUpdate,
+                goToNow
             }}
         >
             {children}

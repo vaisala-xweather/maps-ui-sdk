@@ -38,9 +38,9 @@ export const TimelineMoveToNow = forwardRef<HTMLButtonElement, TimelineMoveToNow
     ...rest
 }, ref) => {
     const {
-        onPositionChange,
         nowPosition,
-        onNowPositionUpdate
+        onNowPositionUpdate,
+        goToNow
     } = useTimelineContext();
 
     useTimeInterval(onNowPositionUpdate, 60000);
@@ -49,7 +49,7 @@ export const TimelineMoveToNow = forwardRef<HTMLButtonElement, TimelineMoveToNow
 
     const handleClick: MouseEventHandler<HTMLButtonElement> = (event) => {
         event.stopPropagation();
-        onPositionChange(nowPosition);
+        goToNow?.();
         onClick?.(event);
     };
 
